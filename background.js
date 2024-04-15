@@ -961,7 +961,7 @@ async function getEligibleUsers() {
   );
   console.log(filteredUsers);
   if (filteredUsers.length > 0) {
-    return filtereπdUsers[0];
+    return filteredUsers[0];
   } else {
     return 0;
   }

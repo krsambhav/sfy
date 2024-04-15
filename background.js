@@ -252,6 +252,8 @@ function messageReceived(msg) {
               consularBooked = false;
               // break;
             }
+          } else {
+            ofcDateCheckCount = 0;
           }
           // else {
           //   // if (tempMinute != currentMinute) {

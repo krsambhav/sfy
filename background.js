@@ -207,23 +207,31 @@ function messageReceived(msg) {
         switch (interval) {
           case "1":
             startSecond = 1;
-            endSecond = 15;
+            endSecond = 10;
             break;
           case "2":
-            startSecond = 16;
-            endSecond = 30;
+            startSecond = 11;
+            endSecond = 20;
             break;
           case "3":
-            startSecond = 31;
-            endSecond = 45;
+            startSecond = 21;
+            endSecond = 30;
             break;
           case "4":
-            startSecond = 46;
+            startSecond = 31;
+            endSecond = 40;
+            break;
+          case "5":
+            startSecond = 41;
+            endSecond = 50;
+            break;
+          case "6":
+            startSecond = 51;
             endSecond = 59;
             break;
           default:
             startSecond = 1;
-            endSecond = 15;
+            endSecond = 10;
         }
         // console.log(`Interval: ${startSecond} - ${endSecond}`);
         if (sleeper) {

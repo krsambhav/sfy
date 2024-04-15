@@ -1,0 +1,29 @@
+{
+  "name": "America Slotify",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "Slotify",
+
+  "action": {
+    "default_title": "Slotify",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["scripting", "activeTab", "cookies"],
+  "icons": {
+    "128": "visa.png",
+    "48": "visa.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.usvisascheduling.com/*",
+        "https://www.usvisascheduling.com/"
+      ],
+      "js": ["script.js"]
+    }
+  ],
+  "host_permissions": ["https://www.kumarsambhav.me/", "*://*/*"]
+}

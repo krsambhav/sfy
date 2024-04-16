@@ -321,7 +321,7 @@ function messageReceived(msg) {
             // break;
           }
         }
-        const randomNumber = randomFloat(0.1, 0.3) * delay * 1000;
+        const randomNumber = randomFloat(0.3, 0.8) * delay * 1000;
         // console.log(
         //   `Sleeping For ${(randomNumber / 1000).toFixed(2)} Seconds`
         // );
@@ -980,7 +980,8 @@ async function getEligibleUsers() {
   var filteredUsers = userData.filter(
     (user) =>
       user["location"] == city &&
-      availableDateInNumbers <= user["lastDateInNumbers"]
+      user["lastDateInNumbers"] >= availableDateInNumbers &&
+      user["pax"] <= latestAvailableSlotQty
   );
   console.log(filteredUsers);
   if (userData.length > 0) {

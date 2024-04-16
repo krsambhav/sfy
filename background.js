@@ -298,7 +298,7 @@ function messageReceived(msg) {
             // break;
           }
         }
-        const randomNumber = randomFloat(0.2, 0.5) * delay * 1000;
+        const randomNumber = randomFloat(0.1, 0.3) * delay * 1000;
         // console.log(
         //   `Sleeping For ${(randomNumber / 1000).toFixed(2)} Seconds`
         // );
@@ -953,14 +953,14 @@ async function getEligibleUsers() {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
-  var filteredUsers = userData.filter(
-    (user) =>
-      user["location"] == city &&
-      user["earliestDateInNumbers"] >= earliestDateInNumbers &&
-      availableDateInNumbers <= user["lastDateInNumbers"]
-  );
-  console.log(filteredUsers);
-  if (filteredUsers.length > 0) {
+  // var filteredUsers = userData.filter(
+  //   (user) =>
+  //     user["location"] == city &&
+  //     user["earliestDateInNumbers"] >= earliestDateInNumbers &&
+  //     availableDateInNumbers <= user["lastDateInNumbers"]
+  // );
+  // console.log(filteredUsers);
+  if (userData.length > 0) {
     return filteredUsers[0];
   } else {
     return 0;

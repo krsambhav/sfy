@@ -980,7 +980,6 @@ async function getEligibleUsers() {
   var filteredUsers = userData.filter(
     (user) =>
       user["location"] == city &&
-      user["earliestDateInNumbers"] >= earliestDateInNumbers &&
       availableDateInNumbers <= user["lastDateInNumbers"]
   );
   console.log(filteredUsers);

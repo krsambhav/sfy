@@ -111,6 +111,7 @@ var ofcBookedTotalDaysSinceZero = 0;
 var tempMinute = 100;
 var interval;
 var minute;
+var latestAvailableSlotQty
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -522,7 +523,7 @@ async function startOFC(city) {
   }
   var latestAvailableSlotTimeID = await ofcSlotResponseSlots["ID"];
   var latestAvailableSlotTime = await ofcSlotResponseSlots["Time"];
-  var latestAvailableSlotQty = await ofcSlotResponseSlots["EntriesAvailable"];
+  latestAvailableSlotQty = await ofcSlotResponseSlots["EntriesAvailable"];
   var randomEligibleUser = await getEligibleUsers();
   if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
@@ -980,8 +981,7 @@ async function getEligibleUsers() {
   var filteredUsers = userData.filter(
     (user) =>
       user["location"] == city &&
-      user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user["pax"] <= latestAvailableSlotQty
+      user["lastDateInNumbers"] >= availableDateInNumbers
   );
   console.log(filteredUsers);
   if (userData.length > 0) {

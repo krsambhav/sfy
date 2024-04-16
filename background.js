@@ -110,6 +110,7 @@ var ofcBookedMonth = 0;
 var ofcBookedTotalDaysSinceZero = 0;
 var tempMinute = 100;
 var interval;
+var minute;
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -160,6 +161,7 @@ function messageReceived(msg) {
     isOFCOnly = msg["isOFCOnly"];
     isConsularOnly = msg["isConsularOnly"];
     interval = msg["interval"];
+    minute = msg["minute"];
     if (msg["dependentsIDs"] === primaryID) {
       applicationIDs = [];
     } else {
@@ -193,7 +195,7 @@ function messageReceived(msg) {
           monthNames[earliestMonth - 1]["abbreviation"]
         } To ${lastDate} ${
           monthNames[lastMonth - 1]["abbreviation"]
-        } | Reschedule: ${isRes} | Interval: ${interval}`
+        } | Reschedule: ${isRes} | Minute: ${minute} | Interval: ${interval}`
       );
       while (true) {
         if (consularBooked) {
@@ -204,6 +206,17 @@ function messageReceived(msg) {
         var currentSecond = currentDateTime.getSeconds();
         var startSecond;
         var endSecond;
+        var startMinute;
+        switch (minute) {
+          case "0":
+            startMinute = 0;
+            break;
+          case "1":
+            startMinute = 1;
+            break;
+          default:
+            startMinute = 0;
+        }
         switch (interval) {
           case "1":
             startSecond = 1;
@@ -237,9 +250,19 @@ function messageReceived(msg) {
         if (sleeper) {
           if (
             (currentMinute == 30 &&
+              startMinute == 0 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
             (currentMinute == 0 &&
+              startMinute == 0 &&
+              currentSecond >= startSecond &&
+              currentSecond <= endSecond) ||
+            (currentMinute == 31 &&
+              startMinute == 1 &&
+              currentSecond >= startSecond &&
+              currentSecond <= endSecond) ||
+            (currentMinute == 1 &&
+              startMinute == 1 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond)
           ) {
@@ -437,7 +460,7 @@ async function startService() {
 }
 
 async function startOFC(city) {
-  if (ofcDateCheckCount > 8) {
+  if (ofcDateCheckCount > 9) {
     console.log("OFC Check Limit Exceeded, Sleeping...");
     return 0;
   }
@@ -471,17 +494,18 @@ async function startOFC(city) {
   if (eligibleDatesArr.length == 0) {
     console.log("No Eligible Dates");
     return 0;
-  } else if (eligibleDatesArr.length == 1) {
+  } else {
     day = eligibleDatesArr[0]["day"];
     month = eligibleDatesArr[0]["month"];
     year = eligibleDatesArr[0]["year"];
     dayID = eligibleDatesArr[0]["dayID"];
-  } else {
-    day = eligibleDatesArr[1]["day"];
-    month = eligibleDatesArr[1]["month"];
-    year = eligibleDatesArr[1]["year"];
-    dayID = eligibleDatesArr[1]["dayID"];
   }
+  // } else {
+  //   day = eligibleDatesArr[1]["day"];
+  //   month = eligibleDatesArr[1]["month"];
+  //   year = eligibleDatesArr[1]["year"];
+  //   dayID = eligibleDatesArr[1]["dayID"];
+  // }
   // console.log(day, month, year, dayID);
   earliestDateInNumbers = earliestMonth * 30 + earliestDate;
   lastDateInNumbers = lastMonth * 30 + lastDate;
@@ -953,13 +977,13 @@ async function getEligibleUsers() {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
-  // var filteredUsers = userData.filter(
-  //   (user) =>
-  //     user["location"] == city &&
-  //     user["earliestDateInNumbers"] >= earliestDateInNumbers &&
-  //     availableDateInNumbers <= user["lastDateInNumbers"]
-  // );
-  // console.log(filteredUsers);
+  var filteredUsers = userData.filter(
+    (user) =>
+      user["location"] == city &&
+      user["earliestDateInNumbers"] >= earliestDateInNumbers &&
+      availableDateInNumbers <= user["lastDateInNumbers"]
+  );
+  console.log(filteredUsers);
   if (userData.length > 0) {
     return userData[0];
   } else {

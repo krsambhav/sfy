@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   var city = "mumbai";
   var consularCity = "mumbai";
   var interval = "1";
+  var minute = "0";
   var consularRange;
   var awaitChecker = "";
   var delay = 10;
@@ -174,6 +175,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   var OFCOnlyButton = document.getElementById("start-ofc-btn");
   var consularOnlyButton = document.getElementById("start-consular-btn");
   var citySelector = document.getElementById("city-selector");
+  var minuteSelector = document.getElementById("minute-selector");
   var intervalSelector = document.getElementById("interval-selector");
   var consularCitySelector = document.getElementById("consular-city-selector");
   var consularRangeInput = document.getElementById("cons-diff-input");
@@ -202,6 +204,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       city = cookieDict["city"] == undefined ? "mumbai" : cookieDict["city"];
       interval =
         cookieDict["interval"] == undefined ? "1" : cookieDict["interval"];
+      minute =
+        cookieDict["minute"] == undefined ? "0" : cookieDict["minute"];
       citySelector.value = city;
       consularCity =
         cookieDict["consularCity"] == undefined
@@ -215,6 +219,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById("primary-user-qty-span").innerHTML = userQty;
       document.getElementById("dependents-id-input").value = dependentsIDs;
       intervalSelector.value = interval;
+      minuteSelector.value = minute;
       document.getElementById("earliest-month-input").value = earliestMonth;
       document.getElementById("earliest-date-input").value = earliestDate;
       document.getElementById("last-month-input").value = lastMonth;
@@ -399,6 +404,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       value: interval,
     });
   };
+  minuteSelector.onchange = async function () {
+    minute = minuteSelector.value;
+    chrome.cookies.set({
+      url: "https://www.kumarsambhav.me/",
+      name: "minute",
+      value: minute,
+    });
+  };
   consularCitySelector.onchange = async function () {
     consularCity = consularCitySelector.value;
     chrome.cookies.set({
@@ -417,53 +430,53 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
   // checkRescheduleButton.onclick = handleCheckRescheduleButtonClick;
   dependentIDButton.onclick = handleDependentButtonClick;
-  OFCOnlyButton.onclick = async function () {
-    if (consularRange == undefined) consularRange = 20;
-    lastMonth = parseInt(document.getElementById("last-month-input").value);
-    lastDate = parseInt(document.getElementById("last-date-input").value);
-    fetchTimeout = parseInt(document.getElementById("timeout-input").value);
-    earliestMonth = parseInt(
-      document.getElementById("earliest-month-input").value
-    );
-    earliestDate = parseInt(
-      document.getElementById("earliest-date-input").value
-    );
-    isReschedule = parseInt(document.getElementById("res-input").value);
-    if (isReschedule == 0) isReschedule = "false";
-    else isReschedule = "true";
-    isSleeper = parseInt(document.getElementById("sleeper-input").value);
-    if (isSleeper == 0) isSleeper = false;
-    else isSleeper = true;
-    awaitChecker = parseInt(document.getElementById("await-input").value);
-    if (awaitChecker == 0) awaitChecker = false;
-    else awaitChecker = true;
-    delay = parseInt(document.getElementById("delay-input").value);
-    isOFCOnly = true;
-    isConsularOnly = false;
-    // city = document.getElementById("city-id-input").value.toLowerCase();
-    var userDetails = {
-      primaryName,
-      primaryID,
-      dependentsIDs,
-      lastMonth,
-      lastDate,
-      earliestMonth,
-      earliestDate,
-      city,
-      consularCity,
-      consularRange,
-      isReschedule,
-      isSleeper,
-      awaitChecker,
-      delay,
-      fetchTimeout,
-      isOFCOnly,
-      isConsularOnly,
-    };
-    chrome.runtime.sendMessage(userDetails, function (response) {
-      console.log(response);
-    });
-  };
+  // OFCOnlyButton.onclick = async function () {
+  //   if (consularRange == undefined) consularRange = 20;
+  //   lastMonth = parseInt(document.getElementById("last-month-input").value);
+  //   lastDate = parseInt(document.getElementById("last-date-input").value);
+  //   fetchTimeout = parseInt(document.getElementById("timeout-input").value);
+  //   earliestMonth = parseInt(
+  //     document.getElementById("earliest-month-input").value
+  //   );
+  //   earliestDate = parseInt(
+  //     document.getElementById("earliest-date-input").value
+  //   );
+  //   isReschedule = parseInt(document.getElementById("res-input").value);
+  //   if (isReschedule == 0) isReschedule = "false";
+  //   else isReschedule = "true";
+  //   isSleeper = parseInt(document.getElementById("sleeper-input").value);
+  //   if (isSleeper == 0) isSleeper = false;
+  //   else isSleeper = true;
+  //   awaitChecker = parseInt(document.getElementById("await-input").value);
+  //   if (awaitChecker == 0) awaitChecker = false;
+  //   else awaitChecker = true;
+  //   delay = parseInt(document.getElementById("delay-input").value);
+  //   isOFCOnly = true;
+  //   isConsularOnly = false;
+  //   // city = document.getElementById("city-id-input").value.toLowerCase();
+  //   var userDetails = {
+  //     primaryName,
+  //     primaryID,
+  //     dependentsIDs,
+  //     lastMonth,
+  //     lastDate,
+  //     earliestMonth,
+  //     earliestDate,
+  //     city,
+  //     consularCity,
+  //     consularRange,
+  //     isReschedule,
+  //     isSleeper,
+  //     awaitChecker,
+  //     delay,
+  //     fetchTimeout,
+  //     isOFCOnly,
+  //     isConsularOnly,
+  //   };
+  //   chrome.runtime.sendMessage(userDetails, function (response) {
+  //     console.log(response);
+  //   });
+  // };
   startAllButton.onclick = async function () {
     if (consularRange == undefined) consularRange = 20;
     console.log("OK");
@@ -538,57 +551,59 @@ document.addEventListener("DOMContentLoaded", async function () {
       isOFCOnly,
       isConsularOnly,
       interval,
+      minute
     };
     chrome.runtime.sendMessage(userDetails, function (response) {
       console.log(response);
     });
   };
-  consularOnlyButton.onclick = async function () {
-    if (consularRange == undefined) consularRange = 20;
-    lastMonth = parseInt(document.getElementById("last-month-input").value);
-    lastDate = parseInt(document.getElementById("last-date-input").value);
-    fetchTimeout = parseInt(document.getElementById("timeout-input").value);
-    earliestMonth = parseInt(
-      document.getElementById("earliest-month-input").value
-    );
-    earliestDate = parseInt(
-      document.getElementById("earliest-date-input").value
-    );
-    isReschedule = parseInt(document.getElementById("res-input").value);
-    if (isReschedule == 0) isReschedule = "false";
-    else isReschedule = "true";
-    isSleeper = parseInt(document.getElementById("sleeper-input").value);
-    if (isSleeper == 0) isSleeper = false;
-    else isSleeper = true;
-    awaitChecker = parseInt(document.getElementById("await-input").value);
-    if (awaitChecker == 0) awaitChecker = false;
-    else awaitChecker = true;
-    delay = parseInt(document.getElementById("delay-input").value);
-    isConsularOnly = true;
-    isOFCOnly = false;
-    // city = document.getElementById("city-id-input").value.toLowerCase();
-    var userDetails = {
-      primaryName,
-      primaryID,
-      dependentsIDs,
-      lastMonth,
-      lastDate,
-      earliestMonth,
-      earliestDate,
-      city,
-      consularCity,
-      consularRange,
-      isReschedule,
-      isSleeper,
-      awaitChecker,
-      delay,
-      fetchTimeout,
-      isOFCOnly,
-      isConsularOnly,
-      interval,
-    };
-    chrome.runtime.sendMessage(userDetails, function (response) {
-      console.log(response);
-    });
-  };
+  // consularOnlyButton.onclick = async function () {
+  //   if (consularRange == undefined) consularRange = 20;
+  //   lastMonth = parseInt(document.getElementById("last-month-input").value);
+  //   lastDate = parseInt(document.getElementById("last-date-input").value);
+  //   fetchTimeout = parseInt(document.getElementById("timeout-input").value);
+  //   earliestMonth = parseInt(
+  //     document.getElementById("earliest-month-input").value
+  //   );
+  //   earliestDate = parseInt(
+  //     document.getElementById("earliest-date-input").value
+  //   );
+  //   isReschedule = parseInt(document.getElementById("res-input").value);
+  //   if (isReschedule == 0) isReschedule = "false";
+  //   else isReschedule = "true";
+  //   isSleeper = parseInt(document.getElementById("sleeper-input").value);
+  //   if (isSleeper == 0) isSleeper = false;
+  //   else isSleeper = true;
+  //   awaitChecker = parseInt(document.getElementById("await-input").value);
+  //   if (awaitChecker == 0) awaitChecker = false;
+  //   else awaitChecker = true;
+  //   delay = parseInt(document.getElementById("delay-input").value);
+  //   isConsularOnly = true;
+  //   isOFCOnly = false;
+  //   // city = document.getElementById("city-id-input").value.toLowerCase();
+  //   var userDetails = {
+  //     primaryName,
+  //     primaryID,
+  //     dependentsIDs,
+  //     lastMonth,
+  //     lastDate,
+  //     earliestMonth,
+  //     earliestDate,
+  //     city,
+  //     consularCity,
+  //     consularRange,
+  //     isReschedule,
+  //     isSleeper,
+  //     awaitChecker,
+  //     delay,
+  //     fetchTimeout,
+  //     isOFCOnly,
+  //     isConsularOnly,
+  //     interval,
+  //     minute
+  //   };
+  //   chrome.runtime.sendMessage(userDetails, function (response) {
+  //     console.log(response);
+  //   });
+  // };
 });

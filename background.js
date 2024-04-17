@@ -980,13 +980,13 @@ async function getEligibleUsers() {
   var userData = await users.json();
   var filteredUsers = userData.filter(
     (user) =>
-      user["location"] == city &&
       user["lastDateInNumbers"] >= availableDateInNumbers &&
       user["pax"] <= latestAvailableSlotQty
   );
+  filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);
-  if (userData.length > 0) {
-    return userData[0];
+  if (filteredUsers.length > 0) {
+    return filteredUsers[0];
   } else {
     return 0;
   }

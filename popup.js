@@ -172,6 +172,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   var primaryIDButton = document.getElementById("set-primary-id-btn");
   var dependentIDButton = document.getElementById("set-dependents-id-btn");
   var startAllButton = document.getElementById("start-btn");
+  var fillFromDBButton = document.getElementById("fill-db-btn");
   var OFCOnlyButton = document.getElementById("start-ofc-btn");
   var consularOnlyButton = document.getElementById("start-consular-btn");
   var citySelector = document.getElementById("city-selector");
@@ -204,8 +205,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       city = cookieDict["city"] == undefined ? "mumbai" : cookieDict["city"];
       interval =
         cookieDict["interval"] == undefined ? "1" : cookieDict["interval"];
-      minute =
-        cookieDict["minute"] == undefined ? "0" : cookieDict["minute"];
+      minute = cookieDict["minute"] == undefined ? "0" : cookieDict["minute"];
       citySelector.value = city;
       consularCity =
         cookieDict["consularCity"] == undefined
@@ -290,6 +290,46 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
   // Attach an onclick event listener to the button
+  fillFromDBButton.onclick = async function () {
+    try {
+      const response = await fetch("http://104.192.2.29:3000/users");
+      const data = await response.json();
+      // Then you filter out the data to find users with pax value of 1
+      const userWithPax = data.filter((user) => user.pax === 1);
+      // console.log(userWithPax)
+      const userArr = userWithPax[0];
+      primaryID = userArr["id"];
+      dependentsIDs = userArr["applicantsID"];
+      primaryName = userArr["name"];
+      userQty = userArr["pax"];
+      document.getElementById("primary-id-input").value = primaryID;
+      document.getElementById("dependents-id-input").value = dependentsIDs;
+      document.getElementById("primary-user-name-span").innerHTML = primaryName;
+      document.getElementById("primary-user-qty-span").innerHTML = userQty;
+      await chrome.cookies.set({
+        url: "https://www.kumarsambhav.me/",
+        name: "primaryID",
+        value: primaryID,
+      });
+      await chrome.cookies.set({
+        url: "https://www.kumarsambhav.me/",
+        name: "primaryName",
+        value: primaryName,
+      });
+      chrome.cookies.set({
+        url: "https://www.kumarsambhav.me/",
+        name: "dependentsIDs",
+        value: dependentsIDs,
+      });
+      chrome.cookies.set({
+        url: "https://www.kumarsambhav.me/",
+        name: "userQty",
+        value: userQty.toString(),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   fillButton.onclick = async function () {
     await handlePrimaryButtonClick();
     await handleCheckRescheduleButtonClick();
@@ -339,13 +379,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     // await handleDependentButtonClick();
   };
   resetButton.onclick = async function () {
-    // document.getElementById("primary-user-name-span").innerHTML = ""
-    // document.getElementById("primary-id-input").value = ""
-    // primaryName = "";
-    // document.getElementById("dependents-id-input").value = ""
-    // dependentsIDs = "";
-    // document.getElementById("primary-user-qty-span").innerHTML = "";
-    // userQty = 0;
     var tempCurrentMonth = new Date().getMonth() + 1;
     var tempCurrentDate = new Date().getDate();
     var tempLastMonth =
@@ -428,55 +461,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       value: consularRange,
     });
   };
-  // checkRescheduleButton.onclick = handleCheckRescheduleButtonClick;
   dependentIDButton.onclick = handleDependentButtonClick;
-  // OFCOnlyButton.onclick = async function () {
-  //   if (consularRange == undefined) consularRange = 20;
-  //   lastMonth = parseInt(document.getElementById("last-month-input").value);
-  //   lastDate = parseInt(document.getElementById("last-date-input").value);
-  //   fetchTimeout = parseInt(document.getElementById("timeout-input").value);
-  //   earliestMonth = parseInt(
-  //     document.getElementById("earliest-month-input").value
-  //   );
-  //   earliestDate = parseInt(
-  //     document.getElementById("earliest-date-input").value
-  //   );
-  //   isReschedule = parseInt(document.getElementById("res-input").value);
-  //   if (isReschedule == 0) isReschedule = "false";
-  //   else isReschedule = "true";
-  //   isSleeper = parseInt(document.getElementById("sleeper-input").value);
-  //   if (isSleeper == 0) isSleeper = false;
-  //   else isSleeper = true;
-  //   awaitChecker = parseInt(document.getElementById("await-input").value);
-  //   if (awaitChecker == 0) awaitChecker = false;
-  //   else awaitChecker = true;
-  //   delay = parseInt(document.getElementById("delay-input").value);
-  //   isOFCOnly = true;
-  //   isConsularOnly = false;
-  //   // city = document.getElementById("city-id-input").value.toLowerCase();
-  //   var userDetails = {
-  //     primaryName,
-  //     primaryID,
-  //     dependentsIDs,
-  //     lastMonth,
-  //     lastDate,
-  //     earliestMonth,
-  //     earliestDate,
-  //     city,
-  //     consularCity,
-  //     consularRange,
-  //     isReschedule,
-  //     isSleeper,
-  //     awaitChecker,
-  //     delay,
-  //     fetchTimeout,
-  //     isOFCOnly,
-  //     isConsularOnly,
-  //   };
-  //   chrome.runtime.sendMessage(userDetails, function (response) {
-  //     console.log(response);
-  //   });
-  // };
   startAllButton.onclick = async function () {
     if (consularRange == undefined) consularRange = 20;
     console.log("OK");
@@ -531,7 +516,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
     isConsularOnly = false;
     isOFCOnly = false;
-    // city = document.getElementById("city-id-input").value.toLowerCase();
     var userDetails = {
       primaryName,
       primaryID,
@@ -551,59 +535,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       isOFCOnly,
       isConsularOnly,
       interval,
-      minute
+      minute,
     };
     chrome.runtime.sendMessage(userDetails, function (response) {
       console.log(response);
     });
   };
-  // consularOnlyButton.onclick = async function () {
-  //   if (consularRange == undefined) consularRange = 20;
-  //   lastMonth = parseInt(document.getElementById("last-month-input").value);
-  //   lastDate = parseInt(document.getElementById("last-date-input").value);
-  //   fetchTimeout = parseInt(document.getElementById("timeout-input").value);
-  //   earliestMonth = parseInt(
-  //     document.getElementById("earliest-month-input").value
-  //   );
-  //   earliestDate = parseInt(
-  //     document.getElementById("earliest-date-input").value
-  //   );
-  //   isReschedule = parseInt(document.getElementById("res-input").value);
-  //   if (isReschedule == 0) isReschedule = "false";
-  //   else isReschedule = "true";
-  //   isSleeper = parseInt(document.getElementById("sleeper-input").value);
-  //   if (isSleeper == 0) isSleeper = false;
-  //   else isSleeper = true;
-  //   awaitChecker = parseInt(document.getElementById("await-input").value);
-  //   if (awaitChecker == 0) awaitChecker = false;
-  //   else awaitChecker = true;
-  //   delay = parseInt(document.getElementById("delay-input").value);
-  //   isConsularOnly = true;
-  //   isOFCOnly = false;
-  //   // city = document.getElementById("city-id-input").value.toLowerCase();
-  //   var userDetails = {
-  //     primaryName,
-  //     primaryID,
-  //     dependentsIDs,
-  //     lastMonth,
-  //     lastDate,
-  //     earliestMonth,
-  //     earliestDate,
-  //     city,
-  //     consularCity,
-  //     consularRange,
-  //     isReschedule,
-  //     isSleeper,
-  //     awaitChecker,
-  //     delay,
-  //     fetchTimeout,
-  //     isOFCOnly,
-  //     isConsularOnly,
-  //     interval,
-  //     minute
-  //   };
-  //   chrome.runtime.sendMessage(userDetails, function (response) {
-  //     console.log(response);
-  //   });
-  // };
 });

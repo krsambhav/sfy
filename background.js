@@ -111,7 +111,7 @@ var ofcBookedTotalDaysSinceZero = 0;
 var tempMinute = 100;
 var interval;
 var minute;
-var latestAvailableSlotQty
+var latestAvailableSlotQty;
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -981,7 +981,8 @@ async function getEligibleUsers() {
   var filteredUsers = userData.filter(
     (user) =>
       user["location"] == city &&
-      user["lastDateInNumbers"] >= availableDateInNumbers
+      user["lastDateInNumbers"] >= availableDateInNumbers &&
+      user['pax'] <= latestAvailableSlotQty
   );
   console.log(filteredUsers);
   if (userData.length > 0) {

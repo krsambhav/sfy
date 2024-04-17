@@ -788,51 +788,51 @@ async function getOFCSlot(dayID, city) {
   }
 }
 async function bookOFCSlot(city, dayID, slotID) {
-  while (true) {
-    try {
-      const now = Date.now(); // Unix timestamp in milliseconds
-      url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/schedule-ofc-appointments-for-family&cacheString=${now}`;
-      if (isRes == "true") {
-        url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/reschedule-ofc-appointments-for-family&cacheString=${now}`;
-      }
-      const response = await fetch(url, {
-        headers: {
-          accept: "application/json, text/javascript, */*; q=0.01",
-          "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
-          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "request-id": generateRequestID(),
-          "sec-ch-ua":
-            '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
-          "sec-ch-ua-arch": '"arm"',
-          "sec-ch-ua-bitness": '"64"',
-          "sec-ch-ua-full-version": '"122.0.6261.69"',
-          "sec-ch-ua-full-version-list":
-            '"Chromium";v="122.0.6261.69", "Not(A:Brand";v="24.0.0.0", "Google Chrome";v="122.0.6261.69"',
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-model": '""',
-          "sec-ch-ua-platform": '"macOS"',
-          "sec-ch-ua-platform-version": '"14.3.1"',
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          traceparent: generateTranceparent(),
-          "x-requested-with": "XMLHttpRequest",
-        },
-        referrer: "https://www.usvisascheduling.com/en-US/ofc-schedule/",
-        referrerPolicy: "strict-origin-when-cross-origin",
-        body: `parameters={"primaryId":"${primaryID}","applications":["${populateGroup()}"],"scheduleDayId":"${dayID}","scheduleEntryId":"${slotID}","postId":"${
-          ofc_ids[city]
-        }"}`,
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(`Error In OFC Booking : ${error}`);
+  // while (true) {
+  try {
+    const now = Date.now(); // Unix timestamp in milliseconds
+    url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/schedule-ofc-appointments-for-family&cacheString=${now}`;
+    if (isRes == "true") {
+      url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/reschedule-ofc-appointments-for-family&cacheString=${now}`;
     }
+    const response = await fetch(url, {
+      headers: {
+        accept: "application/json, text/javascript, */*; q=0.01",
+        "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "request-id": generateRequestID(),
+        "sec-ch-ua":
+          '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+        "sec-ch-ua-arch": '"arm"',
+        "sec-ch-ua-bitness": '"64"',
+        "sec-ch-ua-full-version": '"122.0.6261.69"',
+        "sec-ch-ua-full-version-list":
+          '"Chromium";v="122.0.6261.69", "Not(A:Brand";v="24.0.0.0", "Google Chrome";v="122.0.6261.69"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-model": '""',
+        "sec-ch-ua-platform": '"macOS"',
+        "sec-ch-ua-platform-version": '"14.3.1"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        traceparent: generateTranceparent(),
+        "x-requested-with": "XMLHttpRequest",
+      },
+      referrer: "https://www.usvisascheduling.com/en-US/ofc-schedule/",
+      referrerPolicy: "strict-origin-when-cross-origin",
+      body: `parameters={"primaryId":"${primaryID}","applications":["${populateGroup()}"],"scheduleDayId":"${dayID}","scheduleEntryId":"${slotID}","postId":"${
+        ofc_ids[city]
+      }"}`,
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(`Error In OFC Booking : ${error}`);
   }
+  // }
 }
 async function getConsularDates(consularLocation) {
   while (true) {
@@ -982,7 +982,7 @@ async function getEligibleUsers() {
     (user) =>
       user["location"] == city &&
       user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user['pax'] <= latestAvailableSlotQty
+      user["pax"] <= latestAvailableSlotQty
   );
   console.log(filteredUsers);
   if (userData.length > 0) {

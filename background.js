@@ -322,7 +322,7 @@ function messageReceived(msg) {
             // break;
           }
         }
-        const randomNumber = randomFloat(0.3, 0.8) * delay * 1000;
+        const randomNumber = randomFloat(0.2, 0.6) * delay * 1000;
         // console.log(
         //   `Sleeping For ${(randomNumber / 1000).toFixed(2)} Seconds`
         // );
@@ -978,6 +978,7 @@ async function getEligibleUsers() {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
+  console.log(availableDateInNumbers)
   var filteredUsers = userData.filter(
     (user) =>
       user["lastDateInNumbers"] >= availableDateInNumbers &&

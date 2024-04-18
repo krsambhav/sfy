@@ -282,7 +282,7 @@ function messageReceived(msg) {
               console.log("All Done!");
               ofcBooked = false;
               consularBooked = false;
-              messageReceived(rawMsg);
+              // messageReceived(rawMsg);
               // break;
             }
           } else {
@@ -990,6 +990,7 @@ async function getEligibleUsers() {
   if (filteredUsers.length > 0) {
     return filteredUsers[0];
   } else {
+    console.log('No Users')
     return 0;
   }
 }

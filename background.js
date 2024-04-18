@@ -980,12 +980,10 @@ async function getEligibleUsers() {
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
   console.log(availableDateInNumbers)
-  var todaysDate = new Date().getDate();
   var filteredUsers = userData.filter(
     (user) =>
       user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user["pax"] <= latestAvailableSlotQty &&
-      user['earliestDateInNumbers'] <= todaysDate
+      user["pax"] <= latestAvailableSlotQty
   );
   filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);

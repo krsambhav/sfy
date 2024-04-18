@@ -282,6 +282,7 @@ function messageReceived(msg) {
               console.log("All Done!");
               ofcBooked = false;
               consularBooked = false;
+              messageReceived(rawMsg);
               // break;
             }
           } else {
@@ -979,10 +980,12 @@ async function getEligibleUsers() {
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
   console.log(availableDateInNumbers)
+  var todaysDate = new Date().getDate();
   var filteredUsers = userData.filter(
     (user) =>
       user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user["pax"] <= latestAvailableSlotQty
+      user["pax"] <= latestAvailableSlotQty &&
+      user['earliestDateInNumbers'] <= todaysDate
   );
   filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);

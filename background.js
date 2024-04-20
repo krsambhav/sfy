@@ -543,6 +543,11 @@ async function startOFC(city) {
   );
   console.log(ofcBookingResponse);
   console.log("Booking OFC");
+  if (ofcBookingResponse == undefined) {
+    console.log('OFC Booking Response Undefined')
+    sendCustomError(`OFC Booking Undefined For ${primaryName}`)
+    return 0;
+  }
   if (ofcBookingResponse["AllScheduled"] == true) {
     ofcBookedDate = day;
     ofcBookedMonth = month;
@@ -832,6 +837,7 @@ async function bookOFCSlot(city, dayID, slotID) {
     return data;
   } catch (error) {
     console.log(`Error In OFC Booking : ${error}`);
+    return 0;
   }
   // }
 }

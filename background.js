@@ -282,7 +282,7 @@ function messageReceived(msg) {
               console.log("All Done!");
               ofcBooked = false;
               consularBooked = false;
-              // messageReceived(rawMsg);
+              messageReceived(rawMsg);
               // break;
             }
           } else {
@@ -320,6 +320,7 @@ function messageReceived(msg) {
             console.log("All Done!");
             ofcBooked = false;
             consularBooked = false;
+            messageReceived(rawMsg);
             // break;
           }
         }
@@ -583,8 +584,8 @@ async function startOFC(city) {
         } Pax | Error: ${errorString}`
       );
     } catch (error) {
-      console.log("Error In Error Reporting");
-      sendCustomError(`Error In Error Reporting | ${primaryName}`);
+      console.log("Error In OFC Booking");
+      sendCustomError(`Error In OFC Booking | ${primaryName}`);
     }
   }
   return 0;

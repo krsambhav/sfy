@@ -342,6 +342,12 @@ function capitalizeFirstLetter(string) {
   // return string;
 }
 
+function capitalizeName(str) {
+  return str.replace(/\b\w/g, function (char) {
+    return char.toUpperCase();
+  });
+}
+
 function randomFloat(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -545,8 +551,8 @@ async function startOFC(city) {
   console.log(ofcBookingResponse);
   console.log("Booking OFC");
   if (ofcBookingResponse == undefined) {
-    console.log('OFC Booking Response Undefined')
-    sendCustomError(`OFC Booking Undefined For ${primaryName}`)
+    console.log("OFC Booking Response Undefined");
+    sendCustomError(`OFC Booking Undefined For ${primaryName}`);
     return 0;
   }
   if (ofcBookingResponse["AllScheduled"] == true) {
@@ -565,7 +571,7 @@ async function startOFC(city) {
     console.log(
       `OFC Booked For ${capitalizeFirstLetter(
         city
-      )} On ${day}/${month}/${year} For ${primaryName} | ${
+      )} On ${day}/${month}/${year} For ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax`
     );
@@ -656,7 +662,7 @@ async function startConsular(city) {
     console.log(
       `Consular Booked For ${capitalizeFirstLetter(
         city
-      )} On ${day}/${month}/${year} For ${primaryName} | ${
+      )} On ${day}/${month}/${year} For ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax`
     );
@@ -986,18 +992,19 @@ async function getEligibleUsers() {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
-  console.log(availableDateInNumbers)
+  console.log(availableDateInNumbers);
   var filteredUsers = userData.filter(
     (user) =>
       user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user["pax"] <= latestAvailableSlotQty
+      user["pax"] <= latestAvailableSlotQty &&
+      availableDateInNumbers >= user["earliestDateInNumbers"]
   );
   filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);
   if (filteredUsers.length > 0) {
     return filteredUsers[0];
   } else {
-    console.log('No Users')
+    console.log("No Users");
     return 0;
   }
 }

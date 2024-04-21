@@ -112,6 +112,10 @@ var tempMinute = 100;
 var interval;
 var minute;
 var latestAvailableSlotQty;
+var storedSinglePrimaryID;
+var storedSingleApplicantID;
+var storedPrimaryName;
+var storedPax;
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -996,8 +1000,7 @@ async function getEligibleUsers() {
   var filteredUsers = userData.filter(
     (user) =>
       user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user["pax"] <= latestAvailableSlotQty &&
-      availableDateInNumbers >= user["earliestDateInNumbers"]
+      user["pax"] <= latestAvailableSlotQty
   );
   filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);

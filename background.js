@@ -611,6 +611,7 @@ async function startConsular(city) {
     var consularDatesResponse = await getConsularDates(city);
     // console.log(consularDatesResponse)
     var consularDates = consularDatesResponse["ScheduleDays"];
+    console.log(consularDates)
     storedConsularDates = consularDates;
     var latestConsularDateID;
     var latestConsularDate;

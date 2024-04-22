@@ -114,7 +114,7 @@ var minute;
 var latestAvailableSlotQty;
 var storedSinglePrimaryID;
 var storedSingleApplicantID;
-var storedPrimaryName;
+var storedPrimaryName = '';
 var storedPax;
 var storedConsularDates;
 
@@ -187,6 +187,11 @@ function messageReceived(msg) {
     delay = msg["delay"];
     fetchTimeout = msg["fetchTimeout"];
     traceValue = generateRandomStringBytes(16);
+  }
+  if (storedPrimaryName !== '') {
+    primaryName = storedPrimaryName;
+    primaryID = storedSinglePrimaryID;
+    applicationIDs = storedSingleApplicantID;
   }
   async function initiateConsole() {
     if (isConsularOnly && !forceOFC) ofcBooked = true;
@@ -602,13 +607,13 @@ async function startOFC(city) {
           applicationIDs.length == 0 ? 1 : applicationIDs.length
         } Pax | Error: ${errorString}`
       );
-      primaryName = storedPrimaryName;
-      primaryID = storedSinglePrimaryID;
-      applicationIDs = storedSingleApplicantID;
     } catch (error) {
       console.log("Error In OFC Booking");
       sendCustomError(`Error In OFC Booking | ${primaryName}`);
     }
+    primaryName = storedPrimaryName;
+    primaryID = storedSinglePrimaryID;
+    applicationIDs = storedSingleApplicantID;
   }
   return 0;
 }

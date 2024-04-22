@@ -545,6 +545,10 @@ async function startOFC(city) {
   }
   primaryName = randomEligibleUser["name"];
   console.log(`Fetched User: ${primaryName}`);
+  storedSinglePrimaryID = primaryID;
+  storedSingleApplicantID = applicationIDs;
+  storedPrimaryName = primaryName;
+  storedPax = applicationIDs.length == 0 ? 1 : applicationIDs.length;
   primaryID = randomEligibleUser["id"];
   applicationIDs = JSON.parse(randomEligibleUser["applicantsID"]);
   isRes = randomEligibleUser["reschedule"];
@@ -570,7 +574,7 @@ async function startOFC(city) {
     sendCustomMsg(
       `OFC | ${capitalizeFirstLetter(
         city
-      )} | ${day}/${month} | ${primaryName} | ${
+      )} | ${day}/${month} | ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax`
     );
@@ -598,6 +602,9 @@ async function startOFC(city) {
           applicationIDs.length == 0 ? 1 : applicationIDs.length
         } Pax | Error: ${errorString}`
       );
+      primaryName = storedPrimaryName;
+      primaryID = storedSinglePrimaryID;
+      applicationIDs = storedSingleApplicantID;
     } catch (error) {
       console.log("Error In OFC Booking");
       sendCustomError(`Error In OFC Booking | ${primaryName}`);
@@ -611,7 +618,7 @@ async function startConsular(city) {
     var consularDatesResponse = await getConsularDates(city);
     // console.log(consularDatesResponse)
     var consularDates = consularDatesResponse["ScheduleDays"];
-    console.log(consularDates)
+    console.log(consularDates);
     storedConsularDates = consularDates;
     var latestConsularDateID;
     var latestConsularDate;
@@ -668,7 +675,7 @@ async function startConsular(city) {
     sendCustomMsg(
       `Consular | ${capitalizeFirstLetter(
         city
-      )} | ${day}/${month} | ${primaryName}`
+      )} | ${day}/${month} | ${capitalizeName(primaryName)}`
     );
     console.log(
       `Consular Booked For ${capitalizeFirstLetter(
@@ -1013,7 +1020,8 @@ async function getEligibleUsers() {
       user["pax"] <= latestAvailableSlotQty &&
       user["earliestDateInNumbers"] <= availableDateInNumbers &&
       // Ensure 'ofcDone' is not true
-      (!user["ofcDone"] || user["ofcDone"] === "false") && (!user['sgaError'])
+      (!user["ofcDone"] || user["ofcDone"] === "false") &&
+      !user["sgaError"]
   );
 
   // Sort users by 'pax' in descending order

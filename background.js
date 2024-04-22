@@ -116,6 +116,7 @@ var storedSinglePrimaryID;
 var storedSingleApplicantID;
 var storedPrimaryName;
 var storedPax;
+var storedConsularDates;
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -228,23 +229,23 @@ function messageReceived(msg) {
             endSecond = 10;
             break;
           case "2":
-            startSecond = 11;
+            startSecond = 10;
             endSecond = 20;
             break;
           case "3":
-            startSecond = 21;
+            startSecond = 20;
             endSecond = 30;
             break;
           case "4":
-            startSecond = 31;
+            startSecond = 30;
             endSecond = 40;
             break;
           case "5":
-            startSecond = 41;
+            startSecond = 40;
             endSecond = 50;
             break;
           case "6":
-            startSecond = 51;
+            startSecond = 50;
             endSecond = 59;
             break;
           default:
@@ -587,6 +588,8 @@ async function startOFC(city) {
       var errorString = ofcBookingResponse["Errors"]["m_StringValue"];
       if (errorString.length > 5) {
         errorString = "Gone";
+      } else {
+        markSGAError(primaryID);
       }
 
       console.log("OFC Booking Error");
@@ -608,6 +611,7 @@ async function startConsular(city) {
     var consularDatesResponse = await getConsularDates(city);
     // console.log(consularDatesResponse)
     var consularDates = consularDatesResponse["ScheduleDays"];
+    storedConsularDates = consularDates;
     var latestConsularDateID;
     var latestConsularDate;
     if (consularDates.length > 0) {
@@ -1008,7 +1012,7 @@ async function getEligibleUsers() {
       user["pax"] <= latestAvailableSlotQty &&
       user["earliestDateInNumbers"] <= availableDateInNumbers &&
       // Ensure 'ofcDone' is not true
-      (!user["ofcDone"] || user["ofcDone"] === "false")
+      (!user["ofcDone"] || user["ofcDone"] === "false") && (!user['sgaError'])
   );
 
   // Sort users by 'pax' in descending order
@@ -1063,6 +1067,36 @@ async function markOFCDone(id) {
         "Failed to mark OFC as done, status:",
         updateResponse.status
       );
+    }
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
+}
+async function markSGAError(id) {
+  const url = `http://104.192.2.29:3000/users/${id}`; // Replace with the actual URL of your JSON server and the correct endpoint
+
+  try {
+    // Retrieve the existing data with a GET request
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // Directly set `ofcDone` to true, regardless of its previous state
+    data.sgaError = true;
+
+    // Make a PUT request to update the record
+    const updateResponse = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    // Check if the update was successful
+    if (updateResponse.ok) {
+      console.log("SGA marked successfully.");
+    } else {
+      console.error("Failed to mark SGA, status:", updateResponse.status);
     }
   } catch (error) {
     console.error("Error occurred:", error);

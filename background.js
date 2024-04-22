@@ -579,6 +579,7 @@ async function startOFC(city) {
         applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax`
     );
+    markOFCDone(primaryID);
     return 1;
   } else {
     try {
@@ -992,25 +993,34 @@ async function bookConsularSlot(consularLocation, dayID, slotID) {
   const data = await response.json();
   return data;
 }
-async function getEligibleUsers() {
+async function getEligibleUsers(availableDateInNumbers, latestAvailableSlotQty) {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
-  console.log(availableDateInNumbers);
+  console.log("Available Date In Numbers:", availableDateInNumbers);
+  
   var filteredUsers = userData.filter(
-    (user) =>
+      (user) =>
+      // Check 'lastDateInNumbers' against 'availableDateInNumbers'
       user["lastDateInNumbers"] >= availableDateInNumbers &&
-      user["pax"] <= latestAvailableSlotQty
+      // Check 'pax' against 'latestAvailableSlotQty'
+      user["pax"] <= latestAvailableSlotQty &&
+      // Ensure 'ofcDone' is not true
+      (!user["ofcDone"] || user["ofcDone"] === "false")
   );
+  
+  // Sort users by 'pax' in descending order
   filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);
+  
   if (filteredUsers.length > 0) {
-    return filteredUsers[0];
+      return filteredUsers[0];
   } else {
-    console.log("No Users");
-    return 0;
+      console.log("No eligible users found.");
+      return 0;
   }
 }
+
 async function deleteCompletedUser(id) {
   const requestOptions = {
     method: "DELETE",
@@ -1021,4 +1031,35 @@ async function deleteCompletedUser(id) {
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.error(error));
+}
+
+async function markOFCDone(id) {
+  const url = `http://104.192.2.29:3000/users/${id}`;  // Replace with the actual URL of your JSON server and the correct endpoint
+
+  try {
+      // Retrieve the existing data with a GET request
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // Directly set `ofcDone` to true, regardless of its previous state
+      data.ofcDone = true;
+
+      // Make a PUT request to update the record
+      const updateResponse = await fetch(url, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+      });
+
+      // Check if the update was successful
+      if (updateResponse.ok) {
+          console.log('OFC marked as done successfully.');
+      } else {
+          console.error('Failed to mark OFC as done, status:', updateResponse.status);
+      }
+  } catch (error) {
+      console.error('Error occurred:', error);
+  }
 }

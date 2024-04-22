@@ -993,7 +993,7 @@ async function bookConsularSlot(consularLocation, dayID, slotID) {
   const data = await response.json();
   return data;
 }
-async function getEligibleUsers(availableDateInNumbers, latestAvailableSlotQty) {
+async function getEligibleUsers() {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();

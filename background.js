@@ -353,7 +353,7 @@ function capitalizeFirstLetter(string) {
 }
 
 function capitalizeName(str) {
-  return str.replace(/\b\w/g, function (char) {
+  return str.toLocaleLowerCase().replace(/\b\w/g, function (char) {
     return char.toUpperCase();
   });
 }
@@ -548,11 +548,11 @@ async function startOFC(city) {
     sendCustomError(`No Eligible Users Found`);
     return 0;
   }
-  primaryName = randomEligibleUser["name"];
-  console.log(`Fetched User: ${primaryName}`);
   storedSinglePrimaryID = primaryID;
   storedSingleApplicantID = applicationIDs;
   storedPrimaryName = primaryName;
+  primaryName = randomEligibleUser["name"];
+  console.log(`Fetched User: ${primaryName}`);
   storedPax = applicationIDs.length == 0 ? 1 : applicationIDs.length;
   primaryID = randomEligibleUser["id"];
   applicationIDs = JSON.parse(randomEligibleUser["applicantsID"]);
@@ -581,7 +581,7 @@ async function startOFC(city) {
         city
       )} | ${day}/${month} | ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length
-      } Pax`
+      } Pax | T${minute}${interval}`
     );
     console.log(
       `OFC Booked For ${capitalizeFirstLetter(

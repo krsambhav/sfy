@@ -1014,6 +1014,7 @@ async function getEligibleUsers() {
 
   var filteredUsers = userData.filter(
     (user) =>
+      user['location'] == city &&
       // Check 'lastDateInNumbers' against 'availableDateInNumbers'
       user["lastDateInNumbers"] >= availableDateInNumbers &&
       // Check 'pax' against 'latestAvailableSlotQty'

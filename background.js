@@ -441,7 +441,7 @@ async function startService() {
       city
     )} | Time: ${new Date().toLocaleString()} | ${primaryName} | Total Pax: ${
       applicationIDs.length == 0 ? 1 : applicationIDs.length
-    } | Interval: ${interval}`
+    } | T: ${minute}${interval}`
   );
   responseFetched = true;
   if (!ofcBooked && !consularBooked) {

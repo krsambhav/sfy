@@ -206,7 +206,7 @@ function messageReceived(msg) {
           monthNames[earliestMonth - 1]["abbreviation"]
         } To ${lastDate} ${
           monthNames[lastMonth - 1]["abbreviation"]
-        } | Reschedule: ${isRes} | Minute: ${minute} | Interval: ${interval}`
+        } | Reschedule: ${isRes} | Minute: ${minute} | T: ${minute}${interval}`
       );
       while (true) {
         if (consularBooked) {
@@ -225,37 +225,32 @@ function messageReceived(msg) {
           case "1":
             startMinute = 1;
             break;
+          case "2":
+            startMinute = 2;
+            break;
           default:
             startMinute = 0;
         }
         switch (interval) {
           case "1":
             startSecond = 1;
-            endSecond = 10;
+            endSecond = 15;
             break;
           case "2":
-            startSecond = 10;
-            endSecond = 20;
-            break;
-          case "3":
-            startSecond = 20;
+            startSecond = 15;
             endSecond = 30;
             break;
-          case "4":
+          case "3":
             startSecond = 30;
-            endSecond = 40;
+            endSecond = 45;
             break;
-          case "5":
-            startSecond = 40;
-            endSecond = 50;
-            break;
-          case "6":
-            startSecond = 50;
+          case "4":
+            startSecond = 45;
             endSecond = 59;
             break;
           default:
             startSecond = 1;
-            endSecond = 10;
+            endSecond = 15;
         }
         // console.log(`Interval: ${startSecond} - ${endSecond}`);
         if (sleeper) {
@@ -334,7 +329,7 @@ function messageReceived(msg) {
             // break;
           }
         }
-        const randomNumber = randomFloat(0.2, 0.6) * delay * 1000;
+        const randomNumber = randomFloat(0.2, 1) * delay * 1000;
         // console.log(
         //   `Sleeping For ${(randomNumber / 1000).toFixed(2)} Seconds`
         // );

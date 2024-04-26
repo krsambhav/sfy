@@ -114,7 +114,7 @@ var minute;
 var latestAvailableSlotQty;
 var storedSinglePrimaryID;
 var storedSingleApplicantID;
-var storedPrimaryName = '';
+var storedPrimaryName = "";
 var storedPax;
 var storedConsularDates;
 
@@ -188,7 +188,7 @@ function messageReceived(msg) {
     fetchTimeout = msg["fetchTimeout"];
     traceValue = generateRandomStringBytes(16);
   }
-  if (storedPrimaryName !== '') {
+  if (storedPrimaryName !== "") {
     primaryName = storedPrimaryName;
     primaryID = storedSinglePrimaryID;
     applicationIDs = storedSingleApplicantID;
@@ -270,7 +270,15 @@ function messageReceived(msg) {
             (currentMinute == 1 &&
               startMinute == 1 &&
               currentSecond >= startSecond &&
-              currentSecond <= endSecond)
+              currentSecond <= endSecond) ||
+            (currentMinute == 2 &&
+              startMinute == 2 &&
+              currentSecond >= startSecond &&
+              currentSecond <= endSecond) ||
+              (currentMinute == 32 &&
+                startMinute == 32 &&
+                currentSecond >= startSecond &&
+                currentSecond <= endSecond)
           ) {
             if (awaitChecker) {
               var serviceBinaryResponse = await startService();
@@ -1014,7 +1022,7 @@ async function getEligibleUsers() {
 
   var filteredUsers = userData.filter(
     (user) =>
-      user['location'] == city &&
+      user["location"] == city &&
       // Check 'lastDateInNumbers' against 'availableDateInNumbers'
       user["lastDateInNumbers"] >= availableDateInNumbers &&
       // Check 'pax' against 'latestAvailableSlotQty'

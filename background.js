@@ -272,7 +272,7 @@ function messageReceived(msg) {
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
             (currentMinute == 32 &&
-              startMinute == 32 &&
+              startMinute == 2 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
               (currentMinute == 2 &&

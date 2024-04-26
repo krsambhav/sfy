@@ -271,12 +271,12 @@ function messageReceived(msg) {
               startMinute == 1 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-            (currentMinute == 2 &&
-              startMinute == 2 &&
+            (currentMinute == 32 &&
+              startMinute == 32 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-              (currentMinute == 32 &&
-                startMinute == 32 &&
+              (currentMinute == 2 &&
+                startMinute == 2 &&
                 currentSecond >= startSecond &&
                 currentSecond <= endSecond)
           ) {

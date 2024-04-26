@@ -608,7 +608,7 @@ async function startOFC(city) {
       sendCustomError(
         `Booking Incomplete For ${primaryName} | ${
           applicationIDs.length == 0 ? 1 : applicationIDs.length
-        } Pax - ${city} | Error: ${errorString} | T${minute}${interval}`
+        } Pax | ${capitalizeName(city)} | Error: ${errorString} | T${minute}${interval}`
       );
     } catch (error) {
       console.log("Error In OFC Booking");

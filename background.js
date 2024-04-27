@@ -117,6 +117,7 @@ var storedSingleApplicantID;
 var storedPrimaryName = "";
 var storedPax;
 var storedConsularDates;
+var foundDateString = '';
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -275,10 +276,10 @@ function messageReceived(msg) {
               startMinute == 2 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-              (currentMinute == 2 &&
-                startMinute == 2 &&
-                currentSecond >= startSecond &&
-                currentSecond <= endSecond)
+            (currentMinute == 2 &&
+              startMinute == 2 &&
+              currentSecond >= startSecond &&
+              currentSecond <= endSecond)
           ) {
             if (awaitChecker) {
               var serviceBinaryResponse = await startService();
@@ -503,6 +504,7 @@ async function startOFC(city) {
   }
   var formattedDatesArr = formatRawDateArr(latestOFCDatesArr);
   var { day, month, year, dayID } = formattedDatesArr[0];
+  foundDateString = `${day} ${monthNames[month - 1]["abbreviation"]} ${year}`;
   console.log(
     `Latest Slot Date: ${day} ${monthNames[month - 1]["abbreviation"]} ${year}`
   );
@@ -548,7 +550,9 @@ async function startOFC(city) {
   var randomEligibleUser = await getEligibleUsers();
   if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
-    sendCustomError(`No Eligible Users Found`);
+    sendCustomError(
+      `No Eligible Users | ${city} | ${foundDateString} | T${minute}${interval}`
+    );
     return 0;
   }
   storedSinglePrimaryID = primaryID;
@@ -608,7 +612,9 @@ async function startOFC(city) {
       sendCustomError(
         `Booking Incomplete For ${primaryName} | ${
           applicationIDs.length == 0 ? 1 : applicationIDs.length
-        } Pax | ${capitalizeName(city)} | Error: ${errorString} | T${minute}${interval}`
+        } Pax | ${capitalizeName(
+          city
+        )} | Error: ${errorString} | T${minute}${interval}`
       );
     } catch (error) {
       console.log("Error In OFC Booking");
@@ -1040,7 +1046,7 @@ async function getEligibleUsers() {
   if (filteredUsers.length > 0) {
     return filteredUsers[0];
   } else {
-    console.log("No eligible users found.");
+    console.log(`No Eligible Users`);
     return 0;
   }
 }

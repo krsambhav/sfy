@@ -504,7 +504,7 @@ async function startOFC(city) {
   }
   var formattedDatesArr = formatRawDateArr(latestOFCDatesArr);
   var { day, month, year, dayID } = formattedDatesArr[0];
-  foundDateString = `${day} ${monthNames[month - 1]["abbreviation"]} ${year}`;
+  foundDateString = `${day} ${monthNames[month - 1]["abbreviation"]}`;
   console.log(
     `Latest Slot Date: ${day} ${monthNames[month - 1]["abbreviation"]} ${year}`
   );

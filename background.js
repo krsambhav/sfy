@@ -117,7 +117,7 @@ var storedSingleApplicantID;
 var storedPrimaryName = "";
 var storedPax;
 var storedConsularDates;
-var foundDateString = '';
+var foundDateString = "";
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -1020,7 +1020,7 @@ async function bookConsularSlot(consularLocation, dayID, slotID) {
   const data = await response.json();
   return data;
 }
-async function getEligibleUsers() {
+async function getEligibleUsersOld() {
   console.log("Fetching Users...");
   var users = await fetch("http://104.192.2.29:3000/users/");
   var userData = await users.json();
@@ -1043,6 +1043,52 @@ async function getEligibleUsers() {
   filteredUsers.sort((a, b) => b.pax - a.pax);
   console.log(filteredUsers);
 
+  if (filteredUsers.length > 0) {
+    return filteredUsers[0];
+  } else {
+    console.log(`No Eligible Users`);
+    return 0;
+  }
+}
+
+async function getEligibleUsers() {
+  console.log("Fetching Users...");
+  var users = await fetch("http://104.192.2.29:3000/users/");
+  var userData = await users.json();
+  console.log("Available Date In Numbers:", availableDateInNumbers);
+
+  // Filter users based on multiple conditions
+  var filteredUsers = userData.filter(
+    (user) =>
+      user["location"] == city &&
+      user["lastDateInNumbers"] >= availableDateInNumbers &&
+      user["pax"] <= latestAvailableSlotQty &&
+      user["earliestDateInNumbers"] <= availableDateInNumbers &&
+      (!user["ofcDone"] || user["ofcDone"] === "false") &&
+      !user["sgaError"]
+  );
+
+  // Sort users by 'pax' in descending order
+  filteredUsers.sort((a, b) => b.pax - a.pax);
+
+  // Check for priority users that match the filter conditions and also have the priority flag
+  var priorityUsers = filteredUsers.filter((user) => user["priority"] === true);
+  
+  console.log(filteredUsers);
+  console.log(priorityUsers);
+  
+  if (priorityUsers.length > 0) {
+    // Sort priority users by 'pax' to get the highest 'pax' among them
+    priorityUsers.sort((a, b) => b.pax - a.pax);
+    // Determine if the top priority user has the same or more 'pax' as the top filtered user
+    if (priorityUsers[0].pax >= filteredUsers[0].pax) {
+      console.log("Priority User Selected:", priorityUsers[0]);
+      return priorityUsers[0];
+    }
+  }
+
+  // If no priority user meets the condition, return the top user from filteredUsers
+  console.log("User: ", filteredUsers[0]);
   if (filteredUsers.length > 0) {
     return filteredUsers[0];
   } else {

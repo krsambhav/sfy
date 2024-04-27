@@ -605,7 +605,7 @@ async function startOFC(city) {
       if (errorString.length > 5) {
         errorString = "Gone";
       } else {
-        markSGAError(primaryID);
+        if (errorString.length !== 0) markSGAError(primaryID);
       }
 
       console.log("OFC Booking Error");
@@ -1073,10 +1073,10 @@ async function getEligibleUsers() {
 
   // Check for priority users that match the filter conditions and also have the priority flag
   var priorityUsers = filteredUsers.filter((user) => user["priority"] === true);
-  
+
   console.log(filteredUsers);
   console.log(priorityUsers);
-  
+
   if (priorityUsers.length > 0) {
     // Sort priority users by 'pax' to get the highest 'pax' among them
     priorityUsers.sort((a, b) => b.pax - a.pax);

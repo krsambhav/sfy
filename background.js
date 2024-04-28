@@ -551,7 +551,7 @@ async function startOFC(city) {
   if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
     sendCustomError(
-      `No Eligible Users | ${capitalizeName(city)} | ${foundDateString} | T${minute}${interval}`
+      `No Eligible Users | ${capitalizeName(city)} | ${foundDateString} | ${latestAvailableSlotQty} Pax | T${minute}${interval}`
     );
     return 0;
   }
@@ -612,7 +612,7 @@ async function startOFC(city) {
       sendCustomError(
         `Booking Incomplete For ${primaryName} | ${
           applicationIDs.length == 0 ? 1 : applicationIDs.length
-        } Pax | ${capitalizeName(
+        } Pax | ${foundDateString} | ${capitalizeName(
           city
         )} | Error: ${errorString} | T${minute}${interval}`
       );

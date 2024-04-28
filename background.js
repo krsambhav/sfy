@@ -235,15 +235,15 @@ function messageReceived(msg) {
         switch (interval) {
           case "1":
             startSecond = 1;
-            endSecond = 15;
+            endSecond = 20;
             break;
           case "2":
             startSecond = 15;
-            endSecond = 30;
+            endSecond = 35;
             break;
           case "3":
             startSecond = 30;
-            endSecond = 45;
+            endSecond = 50;
             break;
           case "4":
             startSecond = 45;
@@ -551,7 +551,7 @@ async function startOFC(city) {
   if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
     sendCustomError(
-      `No Eligible Users | ${city} | ${foundDateString} | T${minute}${interval}`
+      `No Eligible Users | ${capitalizeName(city)} | ${foundDateString} | T${minute}${interval}`
     );
     return 0;
   }

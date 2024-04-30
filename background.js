@@ -1068,6 +1068,7 @@ async function getEligibleUsers() {
       !user["sgaError"]
   );
 
+  
   // Sort users by 'pax' in descending order
   filteredUsers.sort((a, b) => b.pax - a.pax);
 

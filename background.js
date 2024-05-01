@@ -89,9 +89,9 @@ let earliestDateInNumbers;
 let lastDateInNumbers;
 let availableDateInNumbers;
 let ofcDateCheckCount = 0;
+let latestConsularDateID;
+let latestConsularDate;
 const defaultYear = 2024;
-
-//Don't Touch
 let rawMsg;
 let serviceStarted = false;
 let sleepSetTimeout_ctrl;
@@ -630,8 +630,7 @@ async function startConsular(city) {
     const consularDates = consularDatesResponse["ScheduleDays"];
     console.log(consularDates);
     storedConsularDates = consularDates;
-    let latestConsularDateID;
-    let latestConsularDate;
+    
     if (consularDates.length > 0) {
       latestConsularDateID = consularDates[0]["ID"];
       latestConsularDate = consularDates[0]["Date"];

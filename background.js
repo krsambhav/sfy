@@ -1,4 +1,6 @@
 let responseFetched = false;
+let cookies;
+let headers;
 
 const ofc_ids = {
   chennai: "3f6bf614-b0db-ec11-a7b4-001dd80234f6",
@@ -67,53 +69,55 @@ const monthNames = [
   },
 ];
 
-let primaryName;
-let isRes;
-let primaryID;
-let applicationIDs = [];
-let city;
-let consularCity;
-let consularRange;
-let sleeper;
-let lastMonth;
-let lastDate;
-let earliestMonth;
-let earliestDate;
-let awaitChecker = false;
-let delay;
-let fetchTimeout;
-let isOFCOnly;
-let isConsularOnly;
-let forceOFC = false;
-let earliestDateInNumbers;
-let lastDateInNumbers;
-let availableDateInNumbers;
-let ofcDateCheckCount = 0;
-let latestConsularDateID;
-let latestConsularDate;
-const defaultYear = 2024;
-let rawMsg;
-let serviceStarted = false;
-let sleepSetTimeout_ctrl;
-let ofcBooked = false;
-let consularBooked = false;
-let traceValue;
-let parentValue;
-let errorCount = 0;
-let timeoutCount = 0;
-let consularErrorCount = 0;
-let ofcBookedDate = 0;
-let ofcBookedMonth = 0;
-let ofcBookedTotalDaysSinceZero = 0;
-let interval;
-let minute;
-let latestAvailableSlotQty;
-let storedSinglePrimaryID;
-let storedSingleApplicantID;
-let storedPrimaryName = "";
-let storedPax;
-let storedConsularDates;
-let foundDateString = "";
+var primaryName;
+var isRes;
+var primaryID;
+var applicationIDs = [];
+var city;
+var consularCity;
+var consularRange;
+var sleeper;
+var lastMonth;
+var lastDate;
+var earliestMonth;
+var earliestDate;
+var awaitChecker = false;
+var delay;
+var fetchTimeout;
+var isOFCOnly;
+var isConsularOnly;
+var forceOFC = false;
+var earliestDateInNumbers;
+var lastDateInNumbers;
+var availableDateInNumbers;
+var ofcDateCheckCount = 0;
+var defaultYear = 2024;
+
+//Don't Touch
+var rawMsg;
+var serviceStarted = false;
+var sleepSetTimeout_ctrl;
+var ofcBooked = false;
+var consularBooked = false;
+var traceValue;
+var parentValue;
+var errorCount = 0;
+var timeoutCount = 0;
+var consularErrorCount = 0;
+var consularTimeoutCount = 0;
+var ofcBookedDate = 0;
+var ofcBookedMonth = 0;
+var ofcBookedTotalDaysSinceZero = 0;
+var tempMinute = 100;
+var interval;
+var minute;
+var latestAvailableSlotQty;
+var storedSinglePrimaryID;
+var storedSingleApplicantID;
+var storedPrimaryName = "";
+var storedPax;
+var storedConsularDates;
+var foundDateString = "";
 
 function sleep(ms) {
   clearInterval(sleepSetTimeout_ctrl);
@@ -134,8 +138,8 @@ async function fetchWithTimeout(resource, options = {}) {
   return response;
 }
 
-// const old_bot_token = "6580155993:AAFlGM86Huni8KSmowjWyftePxXQRU-7YYU";
-// const new_bot_token = "6730508363:AAEfASgDNed5lqn6JUOJSLrXSM49XyICWkg";
+const old_bot_token = "6580155993:AAFlGM86Huni8KSmowjWyftePxXQRU-7YYU";
+const new_bot_token = "6730508363:AAEfASgDNed5lqn6JUOJSLrXSM49XyICWkg";
 
 chrome.runtime.onMessage.addListener(messageReceived);
 
@@ -191,13 +195,12 @@ function messageReceived(msg) {
     applicationIDs = storedSingleApplicantID;
   }
   async function initiateConsole() {
-    let serviceBinaryResponse;
     if (isConsularOnly && !forceOFC) ofcBooked = true;
-    if (serviceStarted === false) {
+    if (serviceStarted == false) {
       serviceStarted = true;
       console.log(
         `${primaryName} | ${
-          applicationIDs.length === 0 ? 1 : applicationIDs.length
+          applicationIDs.length == 0 ? 1 : applicationIDs.length
         } Pax | ${capitalizeFirstLetter(city)} & ${capitalizeFirstLetter(
           consularCity
         )} | ${earliestDate} ${
@@ -210,12 +213,12 @@ function messageReceived(msg) {
         if (consularBooked) {
           break;
         }
-        const currentDateTime = new Date(); // Get the current date and time
-        const currentMinute = currentDateTime.getMinutes(); // Extract the minutes part
-        const currentSecond = currentDateTime.getSeconds();
-        let startSecond;
-        let endSecond;
-        let startMinute;
+        var currentDateTime = new Date(); // Get the current date and time
+        var currentMinute = currentDateTime.getMinutes(); // Extract the minutes part
+        var currentSecond = currentDateTime.getSeconds();
+        var startSecond;
+        var endSecond;
+        var startMinute;
         switch (minute) {
           case "0":
             startMinute = 0;
@@ -253,43 +256,43 @@ function messageReceived(msg) {
         // console.log(`Interval: ${startSecond} - ${endSecond}`);
         if (sleeper) {
           if (
-            (currentMinute === 30 &&
-              startMinute === 0 &&
+            (currentMinute == 30 &&
+              startMinute == 0 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-            (currentMinute === 0 &&
-              startMinute === 0 &&
+            (currentMinute == 0 &&
+              startMinute == 0 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-            (currentMinute === 31 &&
-              startMinute === 1 &&
+            (currentMinute == 31 &&
+              startMinute == 1 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-            (currentMinute === 1 &&
-              startMinute === 1 &&
+            (currentMinute == 1 &&
+              startMinute == 1 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-            (currentMinute === 32 &&
-              startMinute === 2 &&
+            (currentMinute == 32 &&
+              startMinute == 2 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond) ||
-            (currentMinute === 2 &&
-              startMinute === 2 &&
+            (currentMinute == 2 &&
+              startMinute == 2 &&
               currentSecond >= startSecond &&
               currentSecond <= endSecond)
           ) {
             if (awaitChecker) {
-              serviceBinaryResponse = await startService();
-              if (serviceBinaryResponse === "ECE") {
+              var serviceBinaryResponse = await startService();
+              if (serviceBinaryResponse == "ECE") {
                 return "ECE";
               }
             } else {
-              serviceBinaryResponse = startService();
-              if (serviceBinaryResponse === "ECE") {
+              var serviceBinaryResponse = startService();
+              if (serviceBinaryResponse == "ECE") {
                 return "ECE";
               }
             }
-            if (serviceBinaryResponse === 1) {
+            if (serviceBinaryResponse == 1) {
               console.log("All Done!");
               ofcBooked = false;
               consularBooked = false;
@@ -316,18 +319,18 @@ function messageReceived(msg) {
           // }
         } else {
           if (awaitChecker) {
-            serviceBinaryResponse = await startService();
-            if (serviceBinaryResponse === "ECE") {
+            var serviceBinaryResponse = await startService();
+            if (serviceBinaryResponse == "ECE") {
               // console.log('ECE')
               return "ECE";
             }
           } else {
-            serviceBinaryResponse = startService();
-            if (serviceBinaryResponse === "ECE") {
+            var serviceBinaryResponse = startService();
+            if (serviceBinaryResponse == "ECE") {
               return "ECE";
             }
           }
-          if (serviceBinaryResponse === 1) {
+          if (serviceBinaryResponse == 1) {
             console.log("All Done!");
             ofcBooked = false;
             consularBooked = false;
@@ -364,7 +367,7 @@ function randomFloat(min, max) {
 }
 
 function populateGroup() {
-  if (applicationIDs.length === 0) {
+  if (applicationIDs.length == 0) {
     return primaryID;
   } else {
     return applicationIDs.join('","');
@@ -392,23 +395,24 @@ function sendCustomError(message) {
 }
 
 function formatRawDate(rawDate) {
-  const date = new Date(rawDate.substring(0, 10) + " GMT");
-  const day = parseInt(date.toISOString().substring(8, 10), 10);
-  const month = parseInt(date.toISOString().substring(5, 7), 10);
-  const year = parseInt(date.toISOString().substring(0, 4), 10);
-  return {
+  var date = new Date(rawDate.substring(0, 10) + " GMT");
+  var day = parseInt(date.toISOString().substring(8, 10), 10);
+  var month = parseInt(date.toISOString().substring(5, 7), 10);
+  var year = parseInt(date.toISOString().substring(0, 4), 10);
+  var finalDateJSON = {
     day,
     month,
     year,
   };
+  return finalDateJSON;
 }
 
 function formatRawDateArr(rawDateArr) {
-  const formattedDatesArr = [];
+  var formattedDatesArr = [];
   for (let index = 0; index < rawDateArr.length; index++) {
     // console.log(rawDateArr[index])
-    const rawDate = rawDateArr[index]["Date"];
-    const formattedDateJSON = formatRawDate(rawDate);
+    var rawDate = rawDateArr[index]["Date"];
+    var formattedDateJSON = formatRawDate(rawDate);
     formattedDateJSON["dayID"] = rawDateArr[index]["ID"];
     // console.log(formattedDateJSON)
     formattedDatesArr.push(formattedDateJSON);
@@ -417,19 +421,19 @@ function formatRawDateArr(rawDateArr) {
 }
 
 function getEligibleDates(formattedDatesArr) {
-  const eligibleDatesArr = [];
+  var eligibleDatesArr = [];
   for (let index = 0; index < formattedDatesArr.length; index++) {
-    const day = formattedDatesArr[index]["day"];
-    const month = formattedDatesArr[index]["month"];
-    const year = formattedDatesArr[index]["year"];
-    if (year === defaultYear) {
+    var day = formattedDatesArr[index]["day"];
+    var month = formattedDatesArr[index]["month"];
+    var year = formattedDatesArr[index]["year"];
+    if (year == defaultYear) {
       if (
-        (earliestMonth === lastMonth &&
+        (earliestMonth == lastMonth &&
           day >= earliestDate &&
           day <= lastDate &&
-          earliestMonth === month) ||
-        (month === lastMonth && day <= lastDate && month !== earliestMonth) ||
-        (month === earliestMonth && day >= earliestDate && month !== lastMonth) ||
+          earliestMonth == month) ||
+        (month == lastMonth && day <= lastDate && month != earliestMonth) ||
+        (month == earliestMonth && day >= earliestDate && month != lastMonth) ||
         (month > earliestMonth && month < lastMonth)
       ) {
         eligibleDatesArr.push(formattedDatesArr[index]);
@@ -440,25 +444,24 @@ function getEligibleDates(formattedDatesArr) {
 }
 
 async function startService() {
-  let consularBookingBinaryResponse;
   parentValue = generateRandomStringBytes(8);
   console.log(
     `Location: ${capitalizeFirstLetter(
       city
     )} | Time: ${new Date().toLocaleString()} | ${primaryName} | Total Pax: ${
-      applicationIDs.length === 0 ? 1 : applicationIDs.length
+      applicationIDs.length == 0 ? 1 : applicationIDs.length
     } | T: ${minute}${interval}`
   );
   responseFetched = true;
   if (!ofcBooked && !consularBooked) {
-    const ofcBookingBinaryResponse = await startOFC(city);
-    if (ofcBookingBinaryResponse === "ECE") {
+    var ofcBookingBinaryResponse = await startOFC(city);
+    if (ofcBookingBinaryResponse == "ECE") {
       return "ECE";
     }
-    if (ofcBookingBinaryResponse === 1) {
+    if (ofcBookingBinaryResponse == 1) {
       if (isOFCOnly) return 1;
-      consularBookingBinaryResponse = await startConsular(consularCity);
-      if (consularBookingBinaryResponse === 1) {
+      var consularBookingBinaryResponse = await startConsular(consularCity);
+      if (consularBookingBinaryResponse == 1) {
         return 1;
       } else {
         return 0;
@@ -467,8 +470,8 @@ async function startService() {
       return 0;
     }
   } else if (ofcBooked && !consularBooked) {
-    consularBookingBinaryResponse = await startConsular(consularCity);
-    if (consularBookingBinaryResponse === 1) {
+    var consularBookingBinaryResponse = await startConsular(consularCity);
+    if (consularBookingBinaryResponse == 1) {
       return 1;
     } else {
       return 0;
@@ -476,6 +479,7 @@ async function startService() {
   } else {
     return 1;
   }
+  return 0;
 }
 
 async function startOFC(city) {
@@ -485,33 +489,33 @@ async function startOFC(city) {
   }
   const ofcDateResponse = await getOFCDate(city);
   ofcDateCheckCount++;
-  if (ofcDateResponse === "ECE") {
+  if (ofcDateResponse == "ECE") {
     return "ECE";
   }
-  const ofcDatesArr = ofcDateResponse["ScheduleDays"];
-  let latestOFCDatesArr;
+  var ofcDatesArr = ofcDateResponse["ScheduleDays"];
+  var latestOFCDatesArr;
   if (ofcDatesArr.length > 31) {
     latestOFCDatesArr = ofcDatesArr.slice(0, 30);
-  } else if (ofcDatesArr.length !== 0) {
+  } else if (ofcDatesArr.length != 0) {
     latestOFCDatesArr = ofcDatesArr;
   } else {
     console.log("No Dates Found!");
     return 0;
   }
-  const formattedDatesArr = formatRawDateArr(latestOFCDatesArr);
-  let {day, month, year, dayID} = formattedDatesArr[0];
+  var formattedDatesArr = formatRawDateArr(latestOFCDatesArr);
+  var { day, month, year, dayID } = formattedDatesArr[0];
   foundDateString = `${day} ${monthNames[month - 1]["abbreviation"]}`;
   console.log(
     `Latest Slot Date: ${day} ${monthNames[month - 1]["abbreviation"]} ${year}`
   );
-  if (year !== defaultYear) {
+  if (year != defaultYear) {
     return 0;
-  } else if (year === defaultYear && month > lastMonth) {
+  } else if (year == defaultYear && month > lastMonth) {
     return 0;
   }
-  const eligibleDatesArr = getEligibleDates(formattedDatesArr);
+  var eligibleDatesArr = getEligibleDates(formattedDatesArr);
   console.log(eligibleDatesArr);
-  if (eligibleDatesArr.length === 0) {
+  if (eligibleDatesArr.length == 0) {
     console.log("No Eligible Dates");
     return 0;
   } else {
@@ -531,20 +535,20 @@ async function startOFC(city) {
   lastDateInNumbers = lastMonth * 30 + lastDate;
   availableDateInNumbers = month * 30 + day;
   const ofcSlotResponse = await getOFCSlot(dayID, city);
-  let ofcSlotResponseSlots;
+  var ofcSlotResponseSlots;
   if (ofcSlotResponse["ScheduleEntries"].length > 1) {
     ofcSlotResponseSlots = await ofcSlotResponse["ScheduleEntries"][1];
-  } else if (ofcSlotResponse["ScheduleEntries"].length === 1) {
+  } else if (ofcSlotResponse["ScheduleEntries"].length == 1) {
     ofcSlotResponseSlots = await ofcSlotResponse["ScheduleEntries"][0];
   } else {
     console.log("No Slot Timing Found!");
     return 0;
   }
-  const latestAvailableSlotTimeID = await ofcSlotResponseSlots["ID"];
-  const latestAvailableSlotTime = await ofcSlotResponseSlots["Time"];
+  var latestAvailableSlotTimeID = await ofcSlotResponseSlots["ID"];
+  var latestAvailableSlotTime = await ofcSlotResponseSlots["Time"];
   latestAvailableSlotQty = await ofcSlotResponseSlots["EntriesAvailable"];
-  const randomEligibleUser = await getEligibleUsers();
-  if (randomEligibleUser === 0) {
+  var randomEligibleUser = await getEligibleUsers();
+  if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
     sendCustomError(
       `No Eligible Users | ${capitalizeName(city)} | ${foundDateString} | ${latestAvailableSlotQty} Pax | T${minute}${interval}`
@@ -556,24 +560,24 @@ async function startOFC(city) {
   storedPrimaryName = primaryName;
   primaryName = randomEligibleUser["name"];
   console.log(`Fetched User: ${primaryName}`);
-  storedPax = applicationIDs.length === 0 ? 1 : applicationIDs.length;
+  storedPax = applicationIDs.length == 0 ? 1 : applicationIDs.length;
   primaryID = randomEligibleUser["id"];
   applicationIDs = JSON.parse(randomEligibleUser["applicantsID"]);
   isRes = randomEligibleUser["reschedule"];
   console.log(`Latest Slot Time: ${latestAvailableSlotTime}`);
-  let ofcBookingResponse = await bookOFCSlot(
-      city,
-      dayID,
-      latestAvailableSlotTimeID
+  ofcBookingResponse = await bookOFCSlot(
+    city,
+    dayID,
+    latestAvailableSlotTimeID
   );
   console.log(ofcBookingResponse);
   console.log("Booking OFC");
-  if (ofcBookingResponse === undefined) {
+  if (ofcBookingResponse == undefined) {
     console.log("OFC Booking Response Undefined");
     sendCustomError(`OFC Booking Undefined For ${primaryName}`);
     return 0;
   }
-  if (ofcBookingResponse["AllScheduled"] === true) {
+  if (ofcBookingResponse["AllScheduled"] == true) {
     ofcBookedDate = day;
     ofcBookedMonth = month;
     ofcBookedTotalDaysSinceZero = (month - 1) * 30 + day;
@@ -583,31 +587,31 @@ async function startOFC(city) {
       `OFC | ${capitalizeFirstLetter(
         city
       )} | ${day}/${month} | ${capitalizeName(primaryName)} | ${
-        applicationIDs.length === 0 ? 1 : applicationIDs.length
+        applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax | T${minute}${interval}`
     );
     console.log(
       `OFC Booked For ${capitalizeFirstLetter(
         city
       )} On ${day}/${month}/${year} For ${capitalizeName(primaryName)} | ${
-        applicationIDs.length === 0 ? 1 : applicationIDs.length
+        applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax`
     );
-    await markOFCDone(primaryID);
+    markOFCDone(primaryID);
     return 1;
   } else {
     try {
-      let errorString = ofcBookingResponse["Errors"]["m_StringValue"];
+      var errorString = ofcBookingResponse["Errors"]["m_StringValue"];
       if (errorString.length > 5) {
         errorString = "Gone";
       } else {
-        if (errorString.length !== 0) await markSGAError(primaryID);
+        if (errorString.length !== 0) markSGAError(primaryID);
       }
 
       console.log("OFC Booking Error");
       sendCustomError(
         `Booking Incomplete For ${primaryName} | ${
-          applicationIDs.length === 0 ? 1 : applicationIDs.length
+          applicationIDs.length == 0 ? 1 : applicationIDs.length
         } Pax | ${foundDateString} | ${capitalizeName(
           city
         )} | Error: ${errorString} | T${minute}${interval}`
@@ -625,12 +629,13 @@ async function startOFC(city) {
 
 async function startConsular(city) {
   try {
-    const consularDatesResponse = await getConsularDates(city);
+    var consularDatesResponse = await getConsularDates(city);
     // console.log(consularDatesResponse)
-    const consularDates = consularDatesResponse["ScheduleDays"];
+    var consularDates = consularDatesResponse["ScheduleDays"];
     console.log(consularDates);
     storedConsularDates = consularDates;
-    
+    var latestConsularDateID;
+    var latestConsularDate;
     if (consularDates.length > 0) {
       latestConsularDateID = consularDates[0]["ID"];
       latestConsularDate = consularDates[0]["Date"];
@@ -646,8 +651,8 @@ async function startConsular(city) {
     forceOFC = true;
     messageReceived(rawMsg);
   }
-  let {day, month, year} = formatRawDate(latestConsularDate);
-  const consularDaysSinceZero = (month - 1) * 30 + day;
+  var { day, month, year } = formatRawDate(latestConsularDate);
+  var consularDaysSinceZero = (month - 1) * 30 + day;
   if (
     consularDaysSinceZero - ofcBookedTotalDaysSinceZero > consularRange &&
     !isConsularOnly
@@ -660,26 +665,26 @@ async function startConsular(city) {
     );
     return 0;
   }
-  const consularSlotsResponse = await getConsularSlots(
-      city,
-      latestConsularDateID
+  var consularSlotsResponse = await getConsularSlots(
+    city,
+    latestConsularDateID
   );
-  let consularSlots;
+  var consularSlots;
   if (consularSlotsResponse["ScheduleEntries"].length > 0) {
     consularSlots = await consularSlotsResponse["ScheduleEntries"];
   } else {
     console.log("No Slot Timing Found!");
     return 0;
   }
-  const latestConsularSlotID = consularSlots[0]["ID"];
+  var latestConsularSlotID = consularSlots[0]["ID"];
   // console.log(consularSlots, latestConsularSlotID)
-  const consularBookingResponse = await bookConsularSlot(
-      city,
-      latestConsularDateID,
-      latestConsularSlotID
+  var consularBookingResponse = await bookConsularSlot(
+    city,
+    latestConsularDateID,
+    latestConsularSlotID
   );
   // console.log(latestConsularDateID, latestConsularSlotID);
-  if (consularBookingResponse["AllScheduled"] === true) {
+  if (consularBookingResponse["AllScheduled"] == true) {
     consularBooked = true;
     sendCustomMsg(
       `Consular | ${capitalizeFirstLetter(
@@ -690,7 +695,7 @@ async function startConsular(city) {
       `Consular Booked For ${capitalizeFirstLetter(
         city
       )} On ${day}/${month}/${year} For ${capitalizeName(primaryName)} | ${
-        applicationIDs.length === 0 ? 1 : applicationIDs.length
+        applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax`
     );
     deleteCompletedUser(primaryID);
@@ -758,11 +763,12 @@ async function getOFCDate(city) {
           timeout: fetchTimeout,
         }
       );
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error) {
       if (error.name === "AbortError") {
         timeoutCount++;
-        if (timeoutCount % 10 === 1)
+        if (timeoutCount % 10 == 1)
           console.log(`Timeout Exception. Count: ${timeoutCount}`);
       } else if (errorCount > 10) {
         errorCount++;
@@ -770,9 +776,11 @@ async function getOFCDate(city) {
         console.log("Error Count Exceeded!");
         return "ECE";
       } else {
+        // console.log('Error In Getting OFC Date!')
         errorCount++;
       }
       if (error.name !== "AbortError") console.log("Exception!");
+      continue;
     }
   }
 }
@@ -817,7 +825,8 @@ async function getOFCSlot(dayID, city) {
           credentials: "include",
         }
       );
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error) {
       console.log(`Error In OFC Slot Date Fetch: ${error}`);
     }
@@ -825,11 +834,10 @@ async function getOFCSlot(dayID, city) {
 }
 async function bookOFCSlot(city, dayID, slotID) {
   // while (true) {
-  let url;
   try {
     const now = Date.now(); // Unix timestamp in milliseconds
     url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/schedule-ofc-appointments-for-family&cacheString=${now}`;
-    if (isRes === "true") {
+    if (isRes == "true") {
       url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/reschedule-ofc-appointments-for-family&cacheString=${now}`;
     }
     const response = await fetch(url, {
@@ -839,12 +847,12 @@ async function bookOFCSlot(city, dayID, slotID) {
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
         "request-id": generateRequestID(),
         "sec-ch-ua":
-            '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+          '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
         "sec-ch-ua-arch": '"arm"',
         "sec-ch-ua-bitness": '"64"',
         "sec-ch-ua-full-version": '"122.0.6261.69"',
         "sec-ch-ua-full-version-list":
-            '"Chromium";v="122.0.6261.69", "Not(A:Brand";v="24.0.0.0", "Google Chrome";v="122.0.6261.69"',
+          '"Chromium";v="122.0.6261.69", "Not(A:Brand";v="24.0.0.0", "Google Chrome";v="122.0.6261.69"',
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-model": '""',
         "sec-ch-ua-platform": '"macOS"',
@@ -858,13 +866,14 @@ async function bookOFCSlot(city, dayID, slotID) {
       referrer: "https://www.usvisascheduling.com/en-US/ofc-schedule/",
       referrerPolicy: "strict-origin-when-cross-origin",
       body: `parameters={"primaryId":"${primaryID}","applications":["${populateGroup()}"],"scheduleDayId":"${dayID}","scheduleEntryId":"${slotID}","postId":"${
-          ofc_ids[city]
+        ofc_ids[city]
       }"}`,
       method: "POST",
       mode: "cors",
       credentials: "include",
     });
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log(`Error In OFC Booking : ${error}`);
     return 0;
@@ -913,7 +922,8 @@ async function getConsularDates(consularLocation) {
         }
       );
       consularErrorCount = 0;
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error) {
       if (error.name === "AbortError") {
         timeoutCount++;
@@ -966,12 +976,13 @@ async function getConsularSlots(consularLocation, dayID) {
       credentials: "include",
     }
   );
-  return await response.json();
+  const data = await response.json();
+  return data;
 }
 async function bookConsularSlot(consularLocation, dayID, slotID) {
   const now = Date.now(); // Unix timestamp in milliseconds
-  let url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/schedule-consular-appointments-for-family&cacheString=${now}`;
-  if (isRes === "true") {
+  url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/schedule-consular-appointments-for-family&cacheString=${now}`;
+  if (isRes == "true") {
     url = `https://www.usvisascheduling.com/en-US/custom-actions/?route=/api/v1/schedule-group/reschedule-consular-appointments-for-family&cacheString=${now}`;
   }
   const response = await fetch(url, {
@@ -1006,62 +1017,63 @@ async function bookConsularSlot(consularLocation, dayID, slotID) {
     mode: "cors",
     credentials: "include",
   });
-  return await response.json();
+  const data = await response.json();
+  return data;
 }
-// async function getEligibleUsersOld() {
-//   console.log("Fetching Users...");
-//   const users = await fetch("http://104.192.2.29:3000/users/");
-//   const userData = await users.json();
-//   console.log("Available Date In Numbers:", availableDateInNumbers);
-//
-//   const filteredUsers = userData.filter(
-//       (user) =>
-//           user["location"] === city &&
-//           // Check 'lastDateInNumbers' against 'availableDateInNumbers'
-//           user["lastDateInNumbers"] >= availableDateInNumbers &&
-//           // Check 'pax' against 'latestAvailableSlotQty'
-//           user["pax"] <= latestAvailableSlotQty &&
-//           user["earliestDateInNumbers"] <= availableDateInNumbers &&
-//           // Ensure 'ofcDone' is not true
-//           (!user["ofcDone"] || user["ofcDone"] === "false") &&
-//           !user["sgaError"]
-//   );
-//
-//   // Sort users by 'pax' in descending order
-//   filteredUsers.sort((a, b) => b.pax - a.pax);
-//   console.log(filteredUsers);
-//
-//   if (filteredUsers.length > 0) {
-//     return filteredUsers[0];
-//   } else {
-//     console.log(`No Eligible Users`);
-//     return 0;
-//   }
-// }
+async function getEligibleUsersOld() {
+  console.log("Fetching Users...");
+  var users = await fetch("http://104.192.2.29:3000/users/");
+  var userData = await users.json();
+  console.log("Available Date In Numbers:", availableDateInNumbers);
+
+  var filteredUsers = userData.filter(
+    (user) =>
+      user["location"] == city &&
+      // Check 'lastDateInNumbers' against 'availableDateInNumbers'
+      user["lastDateInNumbers"] >= availableDateInNumbers &&
+      // Check 'pax' against 'latestAvailableSlotQty'
+      user["pax"] <= latestAvailableSlotQty &&
+      user["earliestDateInNumbers"] <= availableDateInNumbers &&
+      // Ensure 'ofcDone' is not true
+      (!user["ofcDone"] || user["ofcDone"] === "false") &&
+      !user["sgaError"]
+  );
+
+  // Sort users by 'pax' in descending order
+  filteredUsers.sort((a, b) => b.pax - a.pax);
+  console.log(filteredUsers);
+
+  if (filteredUsers.length > 0) {
+    return filteredUsers[0];
+  } else {
+    console.log(`No Eligible Users`);
+    return 0;
+  }
+}
 
 async function getEligibleUsers() {
   console.log("Fetching Users...");
-  const users = await fetch("http://104.192.2.29:3000/users/");
-  const userData = await users.json();
+  var users = await fetch("http://104.192.2.29:3000/users/");
+  var userData = await users.json();
   console.log("Available Date In Numbers:", availableDateInNumbers);
 
   // Filter users based on multiple conditions
-  const filteredUsers = userData.filter(
-      (user) =>
-          user["location"] === city &&
-          user["lastDateInNumbers"] >= availableDateInNumbers &&
-          user["pax"] <= latestAvailableSlotQty &&
-          user["earliestDateInNumbers"] <= availableDateInNumbers &&
-          (!user["ofcDone"] || user["ofcDone"] === "false") &&
-          !user["sgaError"]
+  var filteredUsers = userData.filter(
+    (user) =>
+      user["location"] == city &&
+      user["lastDateInNumbers"] >= availableDateInNumbers &&
+      user["pax"] <= latestAvailableSlotQty &&
+      user["earliestDateInNumbers"] <= availableDateInNumbers &&
+      (!user["ofcDone"] || user["ofcDone"] === "false") &&
+      !user["sgaError"]
   );
 
-
+  
   // Sort users by 'pax' in descending order
   filteredUsers.sort((a, b) => b.pax - a.pax);
 
   // Check for priority users that match the filter conditions and also have the priority flag
-  const priorityUsers = filteredUsers.filter((user) => user["priority"] === true);
+  var priorityUsers = filteredUsers.filter((user) => user["priority"] === true);
 
   console.log(filteredUsers);
   console.log(priorityUsers);
@@ -1086,7 +1098,7 @@ async function getEligibleUsers() {
   }
 }
 
-function deleteCompletedUser(id) {
+async function deleteCompletedUser(id) {
   const requestOptions = {
     method: "DELETE",
     redirect: "follow",
@@ -1123,8 +1135,8 @@ async function markOFCDone(id) {
       console.log("OFC marked as done successfully.");
     } else {
       console.error(
-          "Failed to mark OFC as done, status:",
-          updateResponse.status
+        "Failed to mark OFC as done, status:",
+        updateResponse.status
       );
     }
   } catch (error) {

@@ -1029,36 +1029,36 @@ async function bookConsularSlot(consularLocation, dayID, slotID) {
     return data;
 }
 
-async function getEligibleUsersOld() {
-    console.log("Fetching Users...");
-    var users = await fetch("http://104.192.2.29:3000/users/");
-    var userData = await users.json();
-    console.log("Available Date In Numbers:", availableDateInNumbers);
-
-    var filteredUsers = userData.filter(
-        (user) =>
-            user["location"] == city &&
-            // Check 'lastDateInNumbers' against 'availableDateInNumbers'
-            user["lastDateInNumbers"] >= availableDateInNumbers &&
-            // Check 'pax' against 'latestAvailableSlotQty'
-            user["pax"] <= latestAvailableSlotQty &&
-            user["earliestDateInNumbers"] <= availableDateInNumbers &&
-            // Ensure 'ofcDone' is not true
-            (!user["ofcDone"] || user["ofcDone"] === "false") &&
-            !user["sgaError"]
-    );
-
-    // Sort users by 'pax' in descending order
-    filteredUsers.sort((a, b) => b.pax - a.pax);
-    console.log(filteredUsers);
-
-    if (filteredUsers.length > 0) {
-        return filteredUsers[0];
-    } else {
-        console.log(`No Eligible Users`);
-        return 0;
-    }
-}
+// async function getEligibleUsersOld() {
+//     console.log("Fetching Users...");
+//     var users = await fetch("http://104.192.2.29:3000/users/");
+//     var userData = await users.json();
+//     console.log("Available Date In Numbers:", availableDateInNumbers);
+//
+//     var filteredUsers = userData.filter(
+//         (user) =>
+//             user["location"] == city &&
+//             // Check 'lastDateInNumbers' against 'availableDateInNumbers'
+//             user["lastDateInNumbers"] >= availableDateInNumbers &&
+//             // Check 'pax' against 'latestAvailableSlotQty'
+//             user["pax"] <= latestAvailableSlotQty &&
+//             user["earliestDateInNumbers"] <= availableDateInNumbers &&
+//             // Ensure 'ofcDone' is not true
+//             (!user["ofcDone"] || user["ofcDone"] === "false") &&
+//             !user["sgaError"]
+//     );
+//
+//     // Sort users by 'pax' in descending order
+//     filteredUsers.sort((a, b) => b.pax - a.pax);
+//     console.log(filteredUsers);
+//
+//     if (filteredUsers.length > 0) {
+//         return filteredUsers[0];
+//     } else {
+//         console.log(`No Eligible Users`);
+//         return 0;
+//     }
+// }
 
 async function getEligibleUsers() {
     console.log("Fetching Users...");

@@ -160,6 +160,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     var userQty = 0;
     var isSleeper = 1;
     var studentMode = false;
+    var visaClass;
     var [currentMonth, currentDate] = new Date()
         .toLocaleString("en-US", {
             timeZone: "Asia/Kolkata",
@@ -214,7 +215,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             lastDate = parseInt(cookieDict["lastDate"]);
             lastMonth = parseInt(cookieDict["lastMonth"]);
             fetchTimeout = parseInt(cookieDict["fetchTimeout"]);
-            studentMode = cookieDict["studentMode"] == undefined ? false : cookieDict["studentMode"];
+            studentMode = cookieDict["studentMode"] == undefined ? false : cookieDict["studentMode"] == 'true' ? true : false;
+            if (studentMode) {
+                studentCheckbox.checked = true;
+            }
             delay = parseInt(cookieDict["delay"]);
             city = cookieDict["city"] == undefined ? "mumbai" : cookieDict["city"];
             interval =
@@ -324,6 +328,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             dependentsIDs = userArr["applicantsID"];
             primaryName = userArr["name"];
             userQty = userArr["pax"];
+            visaClass = userArr["visaClass"];
             studentMode = userArr["visaClass"] === "F-1";
             document.getElementById("primary-id-input").value = primaryID;
             document.getElementById("dependents-id-input").value = dependentsIDs;
@@ -332,7 +337,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             await chrome.cookies.set({
                 url: "https://www.kumarsambhav.me/",
                 name: "studentMode",
-                value: studentMode,
+                value: studentMode.toString(),
             });
             await chrome.cookies.set({
                 url: "https://www.kumarsambhav.me/",
@@ -494,6 +499,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (consularRange == undefined) consularRange = 20;
         console.log("OK");
         lastMonth = parseInt(document.getElementById("last-month-input").value);
+
         chrome.cookies.set({
             url: "https://www.kumarsambhav.me/",
             name: "lastMonth",

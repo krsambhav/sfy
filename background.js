@@ -613,15 +613,15 @@ async function startOFC(city) {
 
             console.log("OFC Booking Error");
             sendCustomError(
-                `Booking Incomplete For ${primaryName} | ${
+                `${errorString} For ${primaryName} | ${
                     applicationIDs.length == 0 ? 1 : applicationIDs.length
                 } Pax | ${foundDateString} | ${capitalizeName(
                     city
-                )} | Error: ${errorString} | T${minute}${interval}`
+                )} | T${minute}${interval}`
             );
         } catch (error) {
             console.log("Error In OFC Booking");
-            sendCustomError(`Error In OFC Booking | ${primaryName}`);
+            sendCustomError(`Error In OFC Booking | ${primaryName} | T${minute}${interval}`);
         }
         primaryName = storedPrimaryName;
         primaryID = storedSinglePrimaryID;
@@ -775,7 +775,7 @@ async function getOFCDate(city) {
                     console.log(`Timeout Exception. Count: ${timeoutCount}`);
             } else if (errorCount > 10) {
                 errorCount++;
-                sendCustomError(`Error Count Exceeded For ${primaryName}`);
+                sendCustomError(`Error Count Exceeded For ${primaryName} | T${minute}${interval}`);
                 console.log("Error Count Exceeded!");
                 return "ECE";
             } else {
@@ -880,7 +880,7 @@ async function bookOFCSlot(city, dayID, slotID) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.log(`Error In OFC Booking : ${error}`);
+        console.log(`Error In OFC Booking : ${error} | T${minute}${interval}`);
         return 0;
     }
     // }

@@ -775,7 +775,7 @@ async function getOFCDate(city) {
                     console.log(`Timeout Exception. Count: ${timeoutCount}`);
             } else if (errorCount > 10) {
                 errorCount++;
-                sendCustomError(`Error Count Exceeded For ${city} | T${minute}${interval}`);
+                sendCustomError(`Error Count Exceeded For ${capitalizeFirstLetter(city)} | T${minute}${interval}`);
                 console.log("Error Count Exceeded!");
                 return "ECE";
             } else {

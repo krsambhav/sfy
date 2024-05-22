@@ -1070,7 +1070,7 @@ async function getEligibleUsers() {
         var filteredUsers = userData.filter(
             (user) =>
                 user['visaClass'] == "F-1" &&
-                user["location"] == city &&
+                user["location"].includes(city) &&
                 user["lastDateInNumbers"] >= availableDateInNumbers &&
                 user["pax"] <= latestAvailableSlotQty &&
                 user["earliestDateInNumbers"] <= availableDateInNumbers &&
@@ -1081,7 +1081,7 @@ async function getEligibleUsers() {
         var filteredUsers = userData.filter(
             (user) =>
                 user['visaClass'] !== "F-1" &&
-                user["location"] == city &&
+                user["location"].includes(city) &&
                 user["lastDateInNumbers"] >= availableDateInNumbers &&
                 user["pax"] <= latestAvailableSlotQty &&
                 user["earliestDateInNumbers"] <= availableDateInNumbers &&

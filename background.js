@@ -202,9 +202,7 @@ function messageReceived(msg) {
             console.log(
                 `${primaryName} | ${
                     applicationIDs.length == 0 ? 1 : applicationIDs.length
-                } Pax | ${capitalizeFirstLetter(city)} & ${capitalizeFirstLetter(
-                    consularCity
-                )} | ${earliestDate} ${
+                } Pax | ${capitalizeFirstLetter(city)} | Sleeper: ${sleeper} | ${earliestDate} ${
                     monthNames[earliestMonth - 1]["abbreviation"]
                 } To ${lastDate} ${
                     monthNames[lastMonth - 1]["abbreviation"]

@@ -75,7 +75,6 @@ var primaryID;
 var applicationIDs = [];
 var city;
 var consularCity;
-var consularRange;
 var sleeper;
 var lastMonth;
 var lastDate;
@@ -178,7 +177,6 @@ function messageReceived(msg) {
         // console.log(applicationIDs)
         city = msg["city"];
         consularCity = msg["consularCity"];
-        consularRange = msg["consularRange"];
         earliestDate = msg["earliestDate"];
         earliestMonth = msg["earliestMonth"];
         lastMonth = msg["lastMonth"];
@@ -655,19 +653,19 @@ async function startConsular(city) {
         messageReceived(rawMsg);
     }
     var {day, month, year} = formatRawDate(latestConsularDate);
-    var consularDaysSinceZero = (month - 1) * 30 + day;
-    if (
-        consularDaysSinceZero - ofcBookedTotalDaysSinceZero > consularRange &&
-        !isConsularOnly
-    ) {
-        console.log(
-            `Consular Date - ${day} | OFC Date - ${ofcBookedDate} | Out of Range - ${consularRange} |`
-        );
-        sendCustomMsg(
-            `Consular Date - ${day} | OFC Date - ${ofcBookedDate} | Out of Range - ${consularRange} | ${primaryName} Days`
-        );
-        return 0;
-    }
+    // var consularDaysSinceZero = (month - 1) * 30 + day;
+    // if (
+    //     consularDaysSinceZero - ofcBookedTotalDaysSinceZero > consularRange &&
+    //     !isConsularOnly
+    // ) {
+    //     console.log(
+    //         `Consular Date - ${day} | OFC Date - ${ofcBookedDate} | Out of Range - ${consularRange} |`
+    //     );
+    //     sendCustomMsg(
+    //         `Consular Date - ${day} | OFC Date - ${ofcBookedDate} | Out of Range - ${consularRange} | ${primaryName} Days`
+    //     );
+    //     return 0;
+    // }
     var consularSlotsResponse = await getConsularSlots(
         city,
         latestConsularDateID
@@ -775,7 +773,7 @@ async function getOFCDate(city) {
                     console.log(`Timeout Exception. Count: ${timeoutCount}`);
             } else if (errorCount > 10) {
                 errorCount++;
-                sendCustomError(`Error Count Exceeded For ${capitalizeFirstLetter(city)} | T${minute}${interval}`);
+                sendCustomError(`Error Count Exceeded | ${capitalizeFirstLetter(city)} | T${minute}${interval}`);
                 console.log("Error Count Exceeded!");
                 return "ECE";
             } else {

@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     var isOFCOnly;
     var rescheduleInputValue;
     var userQty = 0;
-    var isSleeper = 1;
+    var isSleeper = true;
     var studentMode = false;
     var visaClass;
     var [currentMonth, currentDate] = new Date()
@@ -424,13 +424,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                 ? tempCurrentDate + 15
                 : (tempCurrentDate + 15) % 30;
         delay = 10;
-        isSleeper = 1;
+        isSleeper = true;
         document.getElementById("earliest-month-input").value = tempCurrentMonth;
         document.getElementById("earliest-date-input").value = earliestDate;
         document.getElementById("last-month-input").value = lastMonth;
         document.getElementById("last-date-input").value = lastDate;
         document.getElementById("delay-input").value = 1;
-        document.getElementById("sleeper-input").value = 1;
+        document.getElementById("sleeper-input").checked = true;
         citySelector.value = "mumbai";
         city = "mumbai";
         consularCitySelector.value = "mumbai";
@@ -536,9 +536,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         isReschedule = parseInt(document.getElementById("res-input").value);
         if (isReschedule == 0) isReschedule = "false";
         else isReschedule = "true";
-        isSleeper = parseInt(document.getElementById("sleeper-input").value);
-        if (isSleeper == 0) isSleeper = false;
-        else isSleeper = true;
+        isSleeper = parseInt(document.getElementById("sleeper-input").checked);
         awaitChecker = parseInt(document.getElementById("await-input").value);
         if (awaitChecker == 0) awaitChecker = false;
         else awaitChecker = true;

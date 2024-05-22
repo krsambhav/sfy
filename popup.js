@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     var minuteSelector = document.getElementById("minute-selector");
     var intervalSelector = document.getElementById("interval-selector");
     var consularCitySelector = document.getElementById("consular-city-selector");
-    var consularRangeInput = document.getElementById("cons-diff-input");
+    // var consularRangeInput = document.getElementById("cons-diff-input");
     var studentCheckbox = document.getElementById("student-checkbox");
 
     studentCheckbox.addEventListener('change', function () {
@@ -407,7 +407,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             name: "delay",
             value: delay.toString(),
         });
-        consularRange = parseInt(consularRangeInput.value);
+        // consularRange = parseInt(consularRangeInput.value);
         // await handleCheckRescheduleButtonClick();
         // await handleDependentButtonClick();
     };
@@ -485,14 +485,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             value: consularCity,
         });
     };
-    consularRangeInput.onchange = async function () {
-        consularRange = parseInt(consularRangeInput.value);
-        chrome.cookies.set({
-            url: "https://www.kumarsambhav.me/",
-            name: "consularRange",
-            value: consularRange,
-        });
-    };
+    // consularRangeInput.onchange = async function () {
+    //     consularRange = parseInt(consularRangeInput.value);
+    //     chrome.cookies.set({
+    //         url: "https://www.kumarsambhav.me/",
+    //         name: "consularRange",
+    //         value: consularRange,
+    //     });
+    // };
     startAllButton.onclick = async function () {
         if (consularRange == undefined) consularRange = 20;
         console.log("OK");

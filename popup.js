@@ -534,7 +534,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         isReschedule = parseInt(document.getElementById("res-input").value);
         if (isReschedule == 0) isReschedule = "false";
         else isReschedule = "true";
-        isSleeper = parseInt(document.getElementById("sleeper-input").checked);
+        isSleeper = document.getElementById("sleeper-input").checked;
         awaitChecker = parseInt(document.getElementById("await-input").value);
         if (awaitChecker == 0) awaitChecker = false;
         else awaitChecker = true;

@@ -446,7 +446,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             value: consularCity,
         });
     };
-    primaryIDButton.onclick = handlePrimaryButtonClick;
     citySelector.onchange = async function () {
         city = citySelector.value;
         consularCity = city;
@@ -494,7 +493,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             value: consularRange,
         });
     };
-    dependentIDButton.onclick = handleDependentButtonClick;
     startAllButton.onclick = async function () {
         if (consularRange == undefined) consularRange = 20;
         console.log("OK");

@@ -697,7 +697,7 @@ async function startConsular(city) {
                 applicationIDs.length == 0 ? 1 : applicationIDs.length
             } Pax`
         );
-        deleteCompletedUser(primaryID);
+        markConsularDone(primaryID);
         return 1;
     }
     return 0;
@@ -1154,6 +1154,40 @@ async function markOFCDone(id) {
         } else {
             console.error(
                 "Failed to mark OFC as done, status:",
+                updateResponse.status
+            );
+        }
+    } catch (error) {
+        console.error("Error occurred:", error);
+    }
+}
+
+async function markConsularDone(id) {
+    const url = `http://104.192.2.29:3000/users/${id}`; // Replace with the actual URL of your JSON server and the correct endpoint
+
+    try {
+        // Retrieve the existing data with a GET request
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Directly set `consularDone` to true, regardless of its previous state
+        data.consularDone = true;
+
+        // Make a PUT request to update the record
+        const updateResponse = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        // Check if the update was successful
+        if (updateResponse.ok) {
+            console.log("Consular marked as done successfully.");
+        } else {
+            console.error(
+                "Failed to mark Consular as done, status:",
                 updateResponse.status
             );
         }

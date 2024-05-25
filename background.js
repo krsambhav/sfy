@@ -83,7 +83,7 @@ var earliestDate;
 var awaitChecker = false;
 var delay;
 var fetchTimeout;
-var isOFCOnly;
+var isOFCOnly = false;
 var isConsularOnly;
 var forceOFC = false;
 var earliestDateInNumbers;
@@ -562,6 +562,7 @@ async function startOFC(city) {
     storedPax = applicationIDs.length == 0 ? 1 : applicationIDs.length;
     primaryID = randomEligibleUser["id"];
     applicationIDs = JSON.parse(randomEligibleUser["applicantsID"]);
+    isOFCOnly = randomEligibleUser['isOFCOnly'] || false;
     isRes = randomEligibleUser["reschedule"];
     console.log(`Latest Slot Time: ${latestAvailableSlotTime}`);
     ofcBookingResponse = await bookOFCSlot(
@@ -644,7 +645,7 @@ async function startConsular(city) {
         }
     } catch (error) {
         sendCustomError(
-            `Consular Reading Failed For ${primaryName}, Process Stopped.`
+            `Consular Reading Failed For ${primaryName} | ${capitalizeFirstLetter(city)} | T${minute}${interval} | Process Stopped.`
         );
         ofcBooked = false;
         forceOFC = true;
@@ -664,6 +665,7 @@ async function startConsular(city) {
     //     );
     //     return 0;
     // }
+    
     var consularSlotsResponse = await getConsularSlots(
         city,
         latestConsularDateID

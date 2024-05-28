@@ -486,6 +486,16 @@ async function startService() {
   return 1;
 }
 
+async function findMaxEntriesAvailable(arr) {
+  if (!Array.isArray(arr) || arr.length === 0) {
+    return null; // Return null if the input is not a valid array or it's empty
+  }
+
+  return arr.reduce((max, current) => {
+    return current.EntriesAvailable > max.EntriesAvailable ? current : max;
+  }, arr[0]);
+}
+
 async function startOFC(city) {
   if (ofcDateCheckCount > 9) {
     console.log("OFC Check Limit Exceeded, Sleeping...");
@@ -541,7 +551,11 @@ async function startOFC(city) {
   const ofcSlotResponse = await getOFCSlot(dayID, city);
   var ofcSlotResponseSlots;
   if (ofcSlotResponse["ScheduleEntries"].length > 1) {
-    ofcSlotResponseSlots = await ofcSlotResponse["ScheduleEntries"][1];
+    console.log("Found Max Slot");
+    console.log(ofcSlotResponse["ScheduleEntries"]);
+    ofcSlotResponseSlots = await findMaxEntriesAvailable(
+      ofcSlotResponse["ScheduleEntries"]
+    );
   } else if (ofcSlotResponse["ScheduleEntries"].length == 1) {
     ofcSlotResponseSlots = await ofcSlotResponse["ScheduleEntries"][0];
   } else {

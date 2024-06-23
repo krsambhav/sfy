@@ -249,6 +249,32 @@ function messageReceived(msg) {
             startSecond = 45;
             endSecond = 59;
             break;
+
+          case "10":
+            startSecond = 1;
+            endSecond = 10;
+            break;
+          case "20":
+            startSecond = 11;
+            endSecond = 20;
+            break;
+          case "30":
+            startSecond = 21;
+            endSecond = 30;
+            break;
+          case "40":
+            startSecond = 31;
+            endSecond = 40;
+            break;
+          case "50":
+            startSecond = 41;
+            endSecond = 50;
+            break;
+          case "60":
+            startSecond = 51;
+            endSecond = 59;
+            break;
+
           default:
             startSecond = 1;
             endSecond = 15;

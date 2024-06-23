@@ -364,7 +364,11 @@ function messageReceived(msg) {
             // break;
           }
         }
-        const randomNumber = randomFloat(0.2, 1) * delay * 1000;
+        var randomNumber;
+        if (delay == 0) {
+          delay = 0.5;
+        }
+        randomNumber = randomFloat(0.2, 1) * delay * 1000;
         // console.log(
         //   `Sleeping For ${(randomNumber / 1000).toFixed(2)} Seconds`
         // );
@@ -471,7 +475,7 @@ function getEligibleDates(formattedDatesArr) {
 
 async function startService() {
   parentValue = generateRandomStringBytes(8);
-  if (ofcDateCheckCount < 10){
+  if (ofcDateCheckCount < 10) {
     console.log(
       `Location: ${capitalizeFirstLetter(
         city

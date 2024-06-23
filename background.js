@@ -471,13 +471,15 @@ function getEligibleDates(formattedDatesArr) {
 
 async function startService() {
   parentValue = generateRandomStringBytes(8);
-  console.log(
-    `Location: ${capitalizeFirstLetter(
-      city
-    )} | Time: ${new Date().toLocaleString()} | ${primaryName} | Total Pax: ${
-      applicationIDs.length === 0 ? 1 : applicationIDs.length
-    } | T: ${minute}${interval}`
-  );
+  if (ofcDateCheckCount < 10){
+    console.log(
+      `Location: ${capitalizeFirstLetter(
+        city
+      )} | Time: ${new Date().toLocaleString()} | ${primaryName} | Total Pax: ${
+        applicationIDs.length === 0 ? 1 : applicationIDs.length
+      } | T: ${minute}${interval} | D:${delay}`
+    );
+  }
   responseFetched = true;
 
   if (!ofcBooked && !consularBooked) {
@@ -524,7 +526,7 @@ async function findMaxEntriesAvailable(arr) {
 
 async function startOFC(city) {
   if (ofcDateCheckCount > 9) {
-    console.log("OFC Check Limit Exceeded, Sleeping...");
+    // console.log("OFC Check Limit Exceeded, Sleeping...");
     return 0;
   }
   const ofcDateResponse = await getOFCDate(city);

@@ -477,9 +477,9 @@ async function startService() {
   parentValue = generateRandomStringBytes(8);
   if (ofcDateCheckCount < 10) {
     console.log(
-      `Location: ${capitalizeFirstLetter(
+      `${capitalizeFirstLetter(
         city
-      )} | Time: ${new Date().toLocaleString()} | ${primaryName} | Total Pax: ${
+      )} | Time: ${new Date().toLocaleString()} | ${primaryName} | Pax: ${
         applicationIDs.length === 0 ? 1 : applicationIDs.length
       } | T: ${minute}${interval} | D:${delay}`
     );
@@ -638,14 +638,14 @@ async function startOFC(city) {
     ofcBooked = true;
     sleeper = false;
     sendCustomMsg(
-      `OFC | ${capitalizeFirstLetter(
+      `Biometric | ${capitalizeFirstLetter(
         city
       )} | ${day}/${month} | ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length
       } Pax | T${minute}${interval}`
     );
     console.log(
-      `OFC Booked For ${capitalizeFirstLetter(
+      `Biometric Booked For ${capitalizeFirstLetter(
         city
       )} On ${day}/${month}/${year} For ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length
@@ -746,12 +746,12 @@ async function startConsular(city) {
   if (consularBookingResponse["AllScheduled"] == true) {
     consularBooked = true;
     sendCustomMsg(
-      `Consular | ${capitalizeFirstLetter(
+      `Interview | ${capitalizeFirstLetter(
         city
       )} | ${day}/${month} | ${capitalizeName(primaryName)}`
     );
     console.log(
-      `Consular Booked For ${capitalizeFirstLetter(
+      `Interview Booked For ${capitalizeFirstLetter(
         city
       )} On ${day}/${month}/${year} For ${capitalizeName(primaryName)} | ${
         applicationIDs.length == 0 ? 1 : applicationIDs.length

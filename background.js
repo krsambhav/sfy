@@ -597,7 +597,9 @@ async function startOFC(city) {
   var latestAvailableSlotTimeID = await ofcSlotResponseSlots["ID"];
   var latestAvailableSlotTime = await ofcSlotResponseSlots["Time"];
   latestAvailableSlotQty = await ofcSlotResponseSlots["EntriesAvailable"];
+  console.log(new Date().toISOString());
   var randomEligibleUser = await getEligibleUsers();
+  console.log(new Date().toISOString());
   if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
     sendCustomError(
@@ -619,12 +621,14 @@ async function startOFC(city) {
   isOFCOnly = randomEligibleUser["isOFCOnly"] || false;
   isRes = randomEligibleUser["reschedule"];
   console.log(`Latest Slot Time: ${latestAvailableSlotTime}`);
+  console.log(new Date().toISOString());
   ofcBookingResponse = await bookOFCSlot(
     city,
     dayID,
     latestAvailableSlotTimeID
   );
   console.log(ofcBookingResponse);
+  console.log(new Date().toISOString());
   console.log("Booking OFC");
   if (ofcBookingResponse == undefined) {
     console.log("OFC Booking Response Undefined");

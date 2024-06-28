@@ -90,6 +90,7 @@ var earliestDateInNumbers;
 var lastDateInNumbers;
 var availableDateInNumbers;
 var ofcDateCheckCount = 0;
+var ofcCheckLimit = 0;
 var defaultYear = 2024;
 
 //Don't Touch
@@ -170,6 +171,7 @@ function messageReceived(msg) {
     isConsularOnly = msg["isConsularOnly"];
     interval = msg["interval"];
     minute = msg["minute"];
+    ofcCheckLimit = msg["checkLimit"];
     if (msg["dependentsIDs"] === primaryID) {
       applicationIDs = [];
     } else {
@@ -229,6 +231,24 @@ function messageReceived(msg) {
           case "2":
             startMinute = 2;
             break;
+          case "5":
+            startMinute = 5;
+            break;
+          case "10":
+            startMinute = 10;
+            break;
+          case "15":
+            startMinute = 15;
+            break;
+          case "20":
+            startMinute = 20;
+            break;
+          case "25":
+            startMinute = 25;
+            break;
+          case "30":
+            startMinute = 30;
+            break;
           default:
             startMinute = 0;
         }
@@ -279,9 +299,22 @@ function messageReceived(msg) {
             startSecond = 1;
             endSecond = 15;
         }
-        // console.log(`Interval: ${startSecond} - ${endSecond}`);
         if (sleeper) {
+          // console.log(`Interval: ${startMinute} | ${currentMinute} | ${minute}`);
+          // console.log(ofcDateCheckCount)
           if (
+            (currentMinute >= 0 && startMinute == 5 && currentMinute <= 5) ||
+            (currentMinute >= 6 && startMinute == 10 && currentMinute <= 10) ||
+            (currentMinute >= 11 && startMinute == 15 && currentMinute <= 15) ||
+            (currentMinute >= 16 && startMinute == 20 && currentMinute <= 20) ||
+            (currentMinute >= 21 && startMinute == 25 && currentMinute <= 25) ||
+            (currentMinute >= 26 && startMinute == 30 && currentMinute <= 30) ||
+            (currentMinute >= 31 && startMinute == 5 && currentMinute <= 35) ||
+            (currentMinute >= 36 && startMinute == 10 && currentMinute <= 40) ||
+            (currentMinute >= 41 && startMinute == 15 && currentMinute <= 45) ||
+            (currentMinute >= 46 && startMinute == 20 && currentMinute <= 50) ||
+            (currentMinute >= 51 && startMinute == 25 && currentMinute <= 55) ||
+            (currentMinute >= 56 && startMinute == 30 && currentMinute <= 59) ||
             (currentMinute == 30 &&
               startMinute == 0 &&
               currentSecond >= startSecond &&
@@ -475,7 +508,7 @@ function getEligibleDates(formattedDatesArr) {
 
 async function startService() {
   parentValue = generateRandomStringBytes(8);
-  if (ofcDateCheckCount < 10) {
+  if (ofcDateCheckCount < ofcCheckLimit) {
     console.log(
       `${capitalizeFirstLetter(
         city
@@ -529,7 +562,7 @@ async function findMaxEntriesAvailable(arr) {
 }
 
 async function startOFC(city) {
-  if (ofcDateCheckCount > 9) {
+  if (ofcDateCheckCount > ofcCheckLimit) {
     // console.log("OFC Check Limit Exceeded, Sleeping...");
     return 0;
   }

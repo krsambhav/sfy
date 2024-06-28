@@ -124,6 +124,13 @@
           <option value="0" selected>0</option>
           <option value="1">1</option>
           <option value="2">2</option>
+
+          <option value="5">0-5 / 31-35</option>
+          <option value="10">6-10 / 36-40</option>
+          <option value="15">11-15 / 41-45</option>
+          <option value="20">16-20 / 46-50</option>
+          <option value="25">21-25 / 51-55</option>
+          <option value="30">26-30 / 56-60</option>
         </select>
       </div>
       <div class="start-second-container mt-5 mx-10">
@@ -213,12 +220,21 @@
     </div>
 
     <div class="flex flex-row gap-10">
-      <div class="res-container mt-5">
+      <div class="res-container mt-5 hidden">
         <p>Reschedule?</p>
         <input
           type="number"
           id="res-input"
           value="0"
+          class="shadow-md border border-black outline-none px-2 py-1 rounded-sm"
+        />
+      </div>
+      <div class="limit-container mt-5">
+        <p>Limit?</p>
+        <input
+          type="number"
+          id="limit-input"
+          value="1000"
           class="shadow-md border border-black outline-none px-2 py-1 rounded-sm"
         />
       </div>

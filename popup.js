@@ -534,6 +534,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         isReschedule = parseInt(document.getElementById("res-input").value);
         if (isReschedule == 0) isReschedule = "false";
         else isReschedule = "true";
+        var checkLimit = parseInt(document.getElementById("limit-input").value);
         isSleeper = document.getElementById("sleeper-input").checked;
         awaitChecker = parseInt(document.getElementById("await-input").value);
         if (awaitChecker == 0) awaitChecker = false;
@@ -566,7 +567,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             isConsularOnly,
             interval,
             minute,
-            studentMode
+            studentMode,
+            checkLimit
         };
         chrome.runtime.sendMessage(userDetails, function (response) {
             console.log(response);

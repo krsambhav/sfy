@@ -508,7 +508,7 @@ function getEligibleDates(formattedDatesArr) {
 
 async function startService() {
   parentValue = generateRandomStringBytes(8);
-  if (ofcDateCheckCount < ofcCheckLimit) {
+  if (ofcDateCheckCount <= ofcCheckLimit) {
     console.log(
       `${capitalizeFirstLetter(
         city

@@ -635,11 +635,11 @@ async function startOFC(city) {
   console.log(new Date().toISOString());
   if (randomEligibleUser == 0) {
     console.log("No Eligible User Found");
-    sendCustomError(
-      `No Eligible Users | ${capitalizeName(
-        city
-      )} | ${foundDateString} | ${latestAvailableSlotQty} Pax | T${minute}${interval}`
-    );
+    // sendCustomError(
+    //   `No Eligible Users | ${capitalizeName(
+    //     city
+    //   )} | ${foundDateString} | ${latestAvailableSlotQty} Pax | T${minute}${interval}`
+    // );
     return 0;
   }
   storedSinglePrimaryID = primaryID;
